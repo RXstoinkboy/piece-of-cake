@@ -29,8 +29,12 @@ export function Navigation() {
   return (
     <NavigationMenu viewport={false}>
       <NavigationMenuList>
-        {components.map((component) => (
-          <NavigationMenuLink asChild className={navigationMenuTriggerStyle()}>
+        {components.map((component, index) => (
+          <NavigationMenuLink
+            asChild
+            className={navigationMenuTriggerStyle()}
+            key={`${component.href}-${index}`}
+          >
             <Link href={component.href}>{component.title}</Link>
           </NavigationMenuLink>
         ))}

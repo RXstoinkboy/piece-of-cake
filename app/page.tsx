@@ -2,8 +2,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export default function Home() {
   return (
-    <main className="min-h-svh w-full">
-      <section className="flex flex-col items-center justify-center gap-4 p-4 h-[calc(100svh/3)]">
+    <main>
+      <section className="flex flex-col items-center justify-center p-4 h-[calc(100svh/3)]">
         <h1 className="text-4xl font-bold">Welcome {"{USER}"}</h1>
       </section>
       <section className="flex flex-col items-center justify-center gap-4 p-4 min-h-1/2">
