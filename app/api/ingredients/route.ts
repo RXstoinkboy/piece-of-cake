@@ -4,12 +4,9 @@ import connectDB from "@/lib/db";
 
 export const GET = async (request: NextRequest) => {
   try {
-    // Database is already connected via middleware
     await connectDB();
     const ingredients = await Ingredient.find({}).sort({ createdAt: -1 });
-    console.log('===> ingredients ', ingredients);
-    
-    console.log("GET HIT");
+
     return NextResponse.json({ 
       message: "Ingredients fetched successfully!",
       data: ingredients,
@@ -26,10 +23,9 @@ export const GET = async (request: NextRequest) => {
 
 export const POST = async (request: NextRequest) => {
   try {
-    // Database is already connected via middleware
+    await connectDB();
     const body = await request.json();
     
-    // Create new ingredient
     const ingredient = new Ingredient(body);
     await ingredient.save();
     

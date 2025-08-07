@@ -1,3 +1,5 @@
+"use client";
+
 import {
   Card,
   CardContent,
@@ -8,13 +10,25 @@ import {
 import { Ingredient } from "./types";
 import { Button } from "@/components/ui/button";
 import { PlusCircle } from "lucide-react";
+import { useAddIngredient } from "@/lib/hooks/use-ingredients";
 
 export const List = ({ ingredients }: { ingredients: Ingredient[] }) => {
+  const addIngredientMutation = useAddIngredient();
+
+  const handleAddIngredient = () => {
+    addIngredientMutation.mutate({});
+  };
+
   return (
     <div className="flex flex-col gap-4">
-      <Button variant="outline" className="w-fit">
+      <Button
+        variant="outline"
+        className="w-fit"
+        onClick={handleAddIngredient}
+        disabled={addIngredientMutation.isPending}
+      >
         <PlusCircle />
-        Dodaj składnik
+        {addIngredientMutation.isPending ? "Dodawanie..." : "Dodaj składnik"}
       </Button>
       {ingredients.map((ingredient) => (
         <Card key={ingredient._id}>

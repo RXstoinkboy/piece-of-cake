@@ -1,21 +1,26 @@
-import Ingredient from "@/lib/models/Ingredient";
+"use client";
+
 import { Empty } from "../../../components/molecules/empty-state";
 import { List } from "./sections/_list";
-import connectDB from "@/lib/db";
+import { Ingredient } from "./sections/_list/types";
+import { useIngredients, useAddIngredient } from "@/lib/hooks/use-ingredients";
 
-const getIngredients = async () => {
-  try {
-    await connectDB();
-    const ingredients = await Ingredient.find({}).sort({ createdAt: -1 });
-    return ingredients;
-  } catch (error) {
-    console.error("Database operation error:", error);
-    throw new Error("Failed to fetch ingredients");
-  }
+type ContentProps = {
+  initialIngredients: Ingredient[];
 };
 
-export const Content = async () => {
-  const ingredients = await getIngredients();
+export const Content = ({ initialIngredients }: ContentProps) => {
+  const { data: ingredients = [], isLoading } =
+    useIngredients(initialIngredients);
+  const addIngredientMutation = useAddIngredient();
+
+  const handleAddIngredient = async () => {
+    addIngredientMutation.mutate({});
+  };
+
+  if (isLoading && !ingredients.length) {
+    return <div>Ładowanie...</div>;
+  }
 
   if (!ingredients.length) {
     return (
@@ -24,6 +29,7 @@ export const Content = async () => {
           title="Brak składników"
           text="Dodaj pierwszy składnik, aby rozpocząć pracę."
           buttonText="Dodaj składnik"
+          onClick={handleAddIngredient}
         />
       </div>
     );

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { Navigation } from "@/components/molecules/navigation";
+import QueryProvider from "@/lib/providers/query-provider";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -29,10 +30,12 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-svh w-full`}
       >
-        <div className="flex items-center justify-center">
-          <Navigation />
-        </div>
-        {children}
+        <QueryProvider>
+          <div className="flex items-center justify-center">
+            <Navigation />
+          </div>
+          {children}
+        </QueryProvider>
       </body>
     </html>
   );
