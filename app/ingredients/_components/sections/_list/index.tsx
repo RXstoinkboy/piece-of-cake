@@ -1,16 +1,17 @@
 "use client";
 
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import { Ingredient } from "./types";
 import { Button } from "@/components/ui/button";
-import { PlusCircle } from "lucide-react";
+import { PlusCircle, Trash2 } from "lucide-react";
 import { useAddIngredient } from "@/lib/hooks/use-ingredients";
+import {
+  Table,
+  TableHeader,
+  TableRow,
+  TableHead,
+  TableBody,
+  TableCell,
+} from "@/components/ui/table";
 
 export const List = ({ ingredients }: { ingredients: Ingredient[] }) => {
   const addIngredientMutation = useAddIngredient();
@@ -30,24 +31,34 @@ export const List = ({ ingredients }: { ingredients: Ingredient[] }) => {
         <PlusCircle />
         {addIngredientMutation.isPending ? "Dodawanie..." : "Dodaj składnik"}
       </Button>
-      {ingredients.map((ingredient) => (
-        <Card key={ingredient._id}>
-          <CardHeader>
-            <CardTitle>{ingredient.name}</CardTitle>
-            <CardDescription>{ingredient.description}</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="flex items-center gap-2">
-              <span>
-                {ingredient.amount} {ingredient.unit}
-              </span>
-              <span>
-                {ingredient.price} {ingredient.currency}
-              </span>
-            </div>
-          </CardContent>
-        </Card>
-      ))}
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead>Składnik</TableHead>
+            <TableHead>Ilość</TableHead>
+            <TableHead>Jednostka</TableHead>
+            <TableHead>Cena</TableHead>
+            <TableHead>Waluta</TableHead>
+            <TableHead className="sr-only">Akcje</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {ingredients.map((ingredient) => (
+            <TableRow key={ingredient._id}>
+              <TableCell>{ingredient.name}</TableCell>
+              <TableCell>{ingredient.amount}</TableCell>
+              <TableCell>{ingredient.unit}</TableCell>
+              <TableCell>{ingredient.price}</TableCell>
+              <TableCell>{ingredient.currency}</TableCell>
+              <TableCell>
+                <Button variant="outline" size="icon">
+                  <Trash2 />
+                </Button>
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
     </div>
   );
 };
