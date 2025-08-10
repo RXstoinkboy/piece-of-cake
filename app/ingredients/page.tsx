@@ -1,12 +1,20 @@
-import connectDB from "@/lib/db";
 import { Content } from "./_components/content";
-import Ingredient from "@/lib/models/Ingredient";
+import prisma from "@/lib/prisma";
+
+// const getIngredients = async () => {
+//   try {
+//     await connectDB();
+//     const ingredients = await Ingredient.find({}).sort({ createdAt: -1 });
+//     return JSON.parse(JSON.stringify(ingredients));
+//   } catch (error) {
+//     console.error("Database operation error:", error);
+//     return [];
+//   }
+// };
 
 const getIngredients = async () => {
   try {
-    await connectDB();
-    const ingredients = await Ingredient.find({}).sort({ createdAt: -1 });
-    return JSON.parse(JSON.stringify(ingredients));
+    return await prisma.ingredient.findMany();
   } catch (error) {
     console.error("Database operation error:", error);
     return [];
@@ -14,7 +22,7 @@ const getIngredients = async () => {
 };
 
 export default async function Ingredients() {
-  const initialIngredients = await getIngredients();
+  const ingredients = await getIngredients();
 
   return (
     <main>
@@ -22,7 +30,7 @@ export default async function Ingredients() {
         <h1 className="text-4xl font-bold">Składniki</h1>
       </section>
 
-      <Content initialIngredients={initialIngredients} />
+      <Content ingredients={ingredients} />
     </main>
   );
 }

@@ -1,26 +1,22 @@
 "use client";
 
-import { Empty } from "../../../components/molecules/empty-state";
+import { Ingredient } from "@/lib/generated/prisma";
+import { Empty, EmptyButton } from "../../../components/molecules/empty-state";
 import { List } from "./sections/_list";
-import { Ingredient } from "./sections/_list/types";
-import { useIngredients, useAddIngredient } from "@/lib/hooks/use-ingredients";
+import { AddIngredient } from "./sections/_add";
 
 type ContentProps = {
-  initialIngredients: Ingredient[];
+  ingredients: Ingredient[];
 };
 
-export const Content = ({ initialIngredients }: ContentProps) => {
-  const { data: ingredients = [], isLoading } =
-    useIngredients(initialIngredients);
-  const addIngredientMutation = useAddIngredient();
+export const Content = ({ ingredients }: ContentProps) => {
+  // if (isLoading && !ingredients.length) {
+  //   return <div>Ładowanie...</div>;
+  // }
 
-  const handleAddIngredient = async () => {
-    addIngredientMutation.mutate({});
+  const handleAddIngredient = () => {
+    // Implement the logic to add a new ingredient
   };
-
-  if (isLoading && !ingredients.length) {
-    return <div>Ładowanie...</div>;
-  }
 
   if (!ingredients.length) {
     return (
@@ -28,8 +24,13 @@ export const Content = ({ initialIngredients }: ContentProps) => {
         <Empty
           title="Brak składników"
           text="Dodaj pierwszy składnik, aby rozpocząć pracę."
-          buttonText="Dodaj składnik"
-          onClick={handleAddIngredient}
+          buttons={
+            <AddIngredient>
+              <EmptyButton key="add-ingredient" onClick={handleAddIngredient}>
+                Dodaj składnik
+              </EmptyButton>
+            </AddIngredient>
+          }
         />
       </div>
     );

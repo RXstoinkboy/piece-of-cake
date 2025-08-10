@@ -1,6 +1,6 @@
 "use client";
 
-import { Ingredient } from "./types";
+import { Ingredient } from "@/lib/generated/prisma";
 import { Button } from "@/components/ui/button";
 import { PlusCircle, Trash2 } from "lucide-react";
 import { useAddIngredient } from "@/lib/hooks/use-ingredients";
@@ -44,9 +44,9 @@ export const List = ({ ingredients }: { ingredients: Ingredient[] }) => {
         </TableHeader>
         <TableBody>
           {ingredients.map((ingredient) => (
-            <TableRow key={ingredient._id}>
+            <TableRow key={ingredient.id}>
               <TableCell>{ingredient.name}</TableCell>
-              <TableCell>{ingredient.amount}</TableCell>
+              <TableCell>{ingredient.quantity}</TableCell>
               <TableCell>{ingredient.unit}</TableCell>
               <TableCell>{ingredient.price}</TableCell>
               <TableCell>{ingredient.currency}</TableCell>
