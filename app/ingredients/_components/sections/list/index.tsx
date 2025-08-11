@@ -11,8 +11,9 @@ import {
   TableBody,
   TableCell,
 } from "@/components/ui/table";
-import { AddIngredient } from "../_add";
-import { RemoveIngredient } from "../_delete";
+import { AddIngredient } from "../add";
+import { RemoveIngredient } from "../delete";
+import { EditIngredient } from "../edit";
 
 export const List = ({ ingredients }: { ingredients: Ingredient[] }) => {
   return (
@@ -43,9 +44,11 @@ export const List = ({ ingredients }: { ingredients: Ingredient[] }) => {
               <TableCell>{ingredient.price}</TableCell>
               <TableCell>{ingredient.currency}</TableCell>
               <TableCell className="mr-0 flex gap-2">
-                <Button variant="outline" size="icon">
-                  <Pencil />
-                </Button>
+                <EditIngredient ingredient={ingredient}>
+                  <Button variant="outline" size="icon">
+                    <Pencil />
+                  </Button>
+                </EditIngredient>
                 <RemoveIngredient ingredientId={ingredient.id}>
                   <Button variant="outline" size="icon">
                     <Trash2 />

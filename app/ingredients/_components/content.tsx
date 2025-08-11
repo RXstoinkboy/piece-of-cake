@@ -2,8 +2,8 @@
 
 import { Ingredient } from "@/lib/generated/prisma";
 import { Empty, EmptyButton } from "../../../components/molecules/empty-state";
-import { List } from "./sections/_list";
-import { AddIngredient } from "./sections/_add";
+import { List } from "./sections/list";
+import { AddIngredient } from "./sections/add";
 
 type ContentProps = {
   ingredients: Ingredient[];
