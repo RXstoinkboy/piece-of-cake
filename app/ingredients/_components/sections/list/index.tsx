@@ -1,5 +1,3 @@
-"use client";
-
 import { Ingredient } from "@/lib/generated/prisma";
 import { Button } from "@/components/ui/button";
 import { PlusCircle, Trash2, Pencil } from "lucide-react";

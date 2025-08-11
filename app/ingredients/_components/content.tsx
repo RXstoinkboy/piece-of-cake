@@ -18,7 +18,7 @@ export const Content = ({ ingredients }: ContentProps) => {
           text="Dodaj pierwszy składnik, aby rozpocząć pracę."
           buttons={
             <AddIngredient>
-              <EmptyButton key="add-ingredient">Dodaj składnik</EmptyButton>
+              <EmptyButton>Dodaj składnik</EmptyButton>
             </AddIngredient>
           }
         />
