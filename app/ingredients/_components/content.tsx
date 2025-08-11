@@ -10,14 +10,6 @@ type ContentProps = {
 };
 
 export const Content = ({ ingredients }: ContentProps) => {
-  // if (isLoading && !ingredients.length) {
-  //   return <div>Ładowanie...</div>;
-  // }
-
-  const handleAddIngredient = () => {
-    // Implement the logic to add a new ingredient
-  };
-
   if (!ingredients.length) {
     return (
       <div className="flex flex-col items-center justify-center h-full w-full">
@@ -26,9 +18,7 @@ export const Content = ({ ingredients }: ContentProps) => {
           text="Dodaj pierwszy składnik, aby rozpocząć pracę."
           buttons={
             <AddIngredient>
-              <EmptyButton key="add-ingredient" onClick={handleAddIngredient}>
-                Dodaj składnik
-              </EmptyButton>
+              <EmptyButton key="add-ingredient">Dodaj składnik</EmptyButton>
             </AddIngredient>
           }
         />

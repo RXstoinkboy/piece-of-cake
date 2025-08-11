@@ -2,8 +2,7 @@
 
 import { Ingredient } from "@/lib/generated/prisma";
 import { Button } from "@/components/ui/button";
-import { PlusCircle, Trash2 } from "lucide-react";
-import { useAddIngredient } from "@/lib/hooks/use-ingredients";
+import { PlusCircle, Trash2, Pencil } from "lucide-react";
 import {
   Table,
   TableHeader,
@@ -12,25 +11,18 @@ import {
   TableBody,
   TableCell,
 } from "@/components/ui/table";
+import { AddIngredient } from "../_add";
+import { RemoveIngredient } from "../_delete";
 
 export const List = ({ ingredients }: { ingredients: Ingredient[] }) => {
-  const addIngredientMutation = useAddIngredient();
-
-  const handleAddIngredient = () => {
-    addIngredientMutation.mutate({});
-  };
-
   return (
     <div className="flex flex-col gap-4">
-      <Button
-        variant="outline"
-        className="w-fit"
-        onClick={handleAddIngredient}
-        disabled={addIngredientMutation.isPending}
-      >
-        <PlusCircle />
-        {addIngredientMutation.isPending ? "Dodawanie..." : "Dodaj składnik"}
-      </Button>
+      <AddIngredient>
+        <Button variant="outline" className="w-fit">
+          <PlusCircle />
+          Dodaj składnik
+        </Button>
+      </AddIngredient>
       <Table>
         <TableHeader>
           <TableRow>
@@ -50,10 +42,15 @@ export const List = ({ ingredients }: { ingredients: Ingredient[] }) => {
               <TableCell>{ingredient.unit}</TableCell>
               <TableCell>{ingredient.price}</TableCell>
               <TableCell>{ingredient.currency}</TableCell>
-              <TableCell className="mr-0">
+              <TableCell className="mr-0 flex gap-2">
                 <Button variant="outline" size="icon">
-                  <Trash2 />
+                  <Pencil />
                 </Button>
+                <RemoveIngredient ingredientId={ingredient.id}>
+                  <Button variant="outline" size="icon">
+                    <Trash2 />
+                  </Button>
+                </RemoveIngredient>
               </TableCell>
             </TableRow>
           ))}

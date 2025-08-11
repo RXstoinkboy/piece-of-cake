@@ -1,17 +1,6 @@
 import { Content } from "./_components/content";
 import prisma from "@/lib/prisma";
 
-// const getIngredients = async () => {
-//   try {
-//     await connectDB();
-//     const ingredients = await Ingredient.find({}).sort({ createdAt: -1 });
-//     return JSON.parse(JSON.stringify(ingredients));
-//   } catch (error) {
-//     console.error("Database operation error:", error);
-//     return [];
-//   }
-// };
-
 const getIngredients = async () => {
   try {
     return await prisma.ingredient.findMany();

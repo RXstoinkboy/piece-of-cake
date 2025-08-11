@@ -1,3 +1,4 @@
+import { createIngredient } from "@/app/api/ingredients/actions";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -34,7 +35,7 @@ type AddIngredientProps = {
 };
 
 const FormSchema = z.object({
-  name: z.string(),
+  name: z.string().min(1, "Nazwa jest wymagana"),
   quantity: z.number().min(0),
   unit: z.string(),
   price: z.number().min(0),
@@ -46,27 +47,27 @@ export function AddIngredient({ children }: AddIngredientProps) {
     resolver: zodResolver(FormSchema),
     defaultValues: {
       name: "",
-      quantity: 0,
+      quantity: 1,
       unit: "g",
-      price: 0,
+      price: 1,
       currency: "PLN",
     },
   });
 
-  const onSubmit = (data: z.infer<typeof FormSchema>) => {
-    console.log("submitted", data);
+  const onSubmit = async (data: z.infer<typeof FormSchema>) => {
+    await createIngredient(data);
   };
 
   return (
-    <Dialog>
+    <Dialog onOpenChange={(opened) => (opened ? form.reset() : null)}>
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)}>
-          <DialogTrigger asChild>{children}</DialogTrigger>
-          <DialogContent className="sm:max-w-[425px]">
-            <DialogHeader>
-              <DialogTitle>Dodaj składnik</DialogTitle>
-              <DialogDescription>Wpisz dane nowego składnika</DialogDescription>
-            </DialogHeader>
+        <DialogTrigger asChild>{children}</DialogTrigger>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>Dodaj składnik</DialogTitle>
+            <DialogDescription>Wpisz dane nowego składnika</DialogDescription>
+          </DialogHeader>
+          <form onSubmit={form.handleSubmit(onSubmit)}>
             <div className="grid gap-4">
               <div className="grid gap-3">
                 <FormField
@@ -181,12 +182,12 @@ export function AddIngredient({ children }: AddIngredientProps) {
               <DialogClose asChild>
                 <Button variant="outline">Anuluj</Button>
               </DialogClose>
-              <Button type="submit" onClick={form.handleSubmit(onSubmit)}>
-                Dodaj
-              </Button>
+              <DialogClose asChild>
+                <Button type="submit">Dodaj</Button>
+              </DialogClose>
             </DialogFooter>
-          </DialogContent>
-        </form>
+          </form>
+        </DialogContent>
       </Form>
     </Dialog>
   );

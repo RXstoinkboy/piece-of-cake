@@ -23,8 +23,8 @@ model Ingredient {
   currency  String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  recipe    Recipe   @relation(fields: [recipeId], references: [id])
-  recipeId  String   @db.ObjectId
+  Recipe    Recipe?  @relation(fields: [recipeId], references: [id])
+  recipeId  String?  @db.ObjectId
 }
 
 model Recipe {

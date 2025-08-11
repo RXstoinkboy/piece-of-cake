@@ -32,7 +32,7 @@ export const Empty: FC<EmptyProps> = ({ title, text, buttons }) => {
 };
 
 type EmptyButtonProps = ComponentProps<typeof Button> & {
-  onClick: () => void;
+  onClick?: () => void;
   children: string;
 };
 

@@ -2,6 +2,7 @@
 
 import prisma from "@/lib/prisma";
 import { Prisma } from "@/lib/generated/prisma";
+import { revalidatePath } from "next/cache";
 
 export const createIngredient = async ({
   name,
@@ -20,6 +21,8 @@ export const createIngredient = async ({
         currency,
       },
     });
+    revalidatePath("/ingredients");
+    revalidatePath("/recipes");
     return ingredient;
   } catch (error) {
     console.error("Error creating ingredient:", error);
@@ -44,6 +47,9 @@ export const updateIngredient = async ({
         currency,
       },
     });
+    revalidatePath("/ingredients");
+    revalidatePath("/recipes");
+
     return ingredient;
   } catch (error) {
     console.error(`Error updating ingredient with ID ${id}:`, error);
@@ -56,6 +62,9 @@ export const deleteIngredient = async (id: string) => {
     const ingredient = await prisma.ingredient.delete({
       where: { id },
     });
+    revalidatePath("/ingredients");
+    revalidatePath("/recipes");
+
     return ingredient;
   } catch (error) {
     console.error(`Error deleting ingredient with ID ${id}:`, error);
