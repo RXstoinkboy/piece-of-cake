@@ -11,9 +11,9 @@ import {
   TableBody,
   TableCell,
 } from "@/components/ui/table";
-import { AddIngredient } from "../add";
-import { RemoveIngredient } from "../delete";
-import { EditIngredient } from "../edit";
+import { AddIngredient } from "../modals/add";
+import { RemoveIngredient } from "../modals/delete";
+import { EditIngredient } from "../modals/edit";
 
 export const List = ({ ingredients }: { ingredients: Ingredient[] }) => {
   return (
