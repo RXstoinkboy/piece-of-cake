@@ -6,7 +6,6 @@ import { Database } from "@/types/supabase";
 
 type IngredientInsert = Database["public"]["Tables"]["ingredients"]["Insert"];
 type IngredientUpdate = Database["public"]["Tables"]["ingredients"]["Update"];
-type IngredientSelect = Database["public"]["Tables"]["ingredients"]["Row"];
 
 export const createIngredient = async ({
   name,
