@@ -1,12 +1,12 @@
 "use client";
 
-import { Ingredient } from "@/lib/generated/prisma";
+import { Database } from "@/types/supabase";
 import { Empty, EmptyButton } from "../../../components/molecules/empty-state";
 import { List } from "./sections/list";
 import { AddIngredient } from "./sections/modals/add";
 
 type ContentProps = {
-  ingredients: Ingredient[];
+  ingredients: Database["public"]["Tables"]["ingredients"]["Row"][];
 };
 
 export const Content = ({ ingredients }: ContentProps) => {

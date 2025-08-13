@@ -1,4 +1,5 @@
 import { getRecipes } from "../api/recipes/actions";
+import { Content } from "./content";
 
 export default async function Recipes() {
   const recipes = await getRecipes();
@@ -9,7 +10,7 @@ export default async function Recipes() {
         <h1 className="text-4xl font-bold">Przepisy</h1>
       </section>
 
-      {/*<Content ingredients={ingredients} />*/}
+      <Content recipes={recipes} />
     </main>
   );
 }
