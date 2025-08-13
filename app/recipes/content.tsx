@@ -2,7 +2,7 @@
 
 import { Database } from "@/types/supabase";
 import { Empty, EmptyButton } from "@/components/molecules/empty-state";
-import { AddRecipe } from "./@add";
+import { AddRecipe } from "./_add";
 // import { List } from "./sections/list";
 // import { AddIngredient } from "./sections/modals/add";
 
