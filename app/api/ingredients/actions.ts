@@ -1,8 +1,12 @@
 "use server";
 
-import prisma from "@/lib/prisma";
-import { Prisma } from "@/lib/generated/prisma";
+import { supabase } from "@/lib/supabase";
 import { revalidatePath } from "next/cache";
+import { Database } from "@/types/supabase";
+
+type IngredientInsert = Database["public"]["Tables"]["ingredients"]["Insert"];
+type IngredientUpdate = Database["public"]["Tables"]["ingredients"]["Update"];
+type IngredientSelect = Database["public"]["Tables"]["ingredients"]["Row"];
 
 export const createIngredient = async ({
   name,
@@ -10,20 +14,25 @@ export const createIngredient = async ({
   unit,
   price,
   currency,
-}: Prisma.IngredientCreateInput) => {
+}: IngredientInsert) => {
   try {
-    const ingredient = await prisma.ingredient.create({
-      data: {
+    const { data, error } = await supabase
+      .from("ingredients")
+      .insert({
         name,
         quantity,
         unit,
         price,
         currency,
-      },
-    });
+      })
+      .select()
+      .single();
+    if (error) {
+      throw error;
+    }
     revalidatePath("/ingredients");
     revalidatePath("/recipes");
-    return ingredient;
+    return data;
   } catch (error) {
     console.error("Error creating ingredient:", error);
     throw error;
@@ -36,21 +45,26 @@ export const updateIngredient = async ({
   quantity,
   unit,
   currency,
-}: Prisma.IngredientUpdateInput & { id: string }) => {
+}: IngredientUpdate & { id: string }) => {
   try {
-    const ingredient = await prisma.ingredient.update({
-      where: { id },
-      data: {
+    const { data, error } = await supabase
+      .from("ingredients")
+      .update({
         name,
         quantity,
         unit,
         currency,
-      },
-    });
+      })
+      .eq("id", id)
+      .select()
+      .single();
+    if (error) {
+      throw error;
+    }
     revalidatePath("/ingredients");
     revalidatePath("/recipes");
 
-    return ingredient;
+    return data;
   } catch (error) {
     console.error(`Error updating ingredient with ID ${id}:`, error);
     throw error;
@@ -59,13 +73,19 @@ export const updateIngredient = async ({
 
 export const deleteIngredient = async (id: string) => {
   try {
-    const ingredient = await prisma.ingredient.delete({
-      where: { id },
-    });
+    const { data, error } = await supabase
+      .from("ingredients")
+      .delete()
+      .eq("id", id)
+      .select()
+      .single();
+    if (error) {
+      throw error;
+    }
     revalidatePath("/ingredients");
     revalidatePath("/recipes");
 
-    return ingredient;
+    return data;
   } catch (error) {
     console.error(`Error deleting ingredient with ID ${id}:`, error);
     throw error;
@@ -74,10 +94,15 @@ export const deleteIngredient = async (id: string) => {
 
 export const getIngredient = async (id: string) => {
   try {
-    const ingredient = await prisma.ingredient.findUnique({
-      where: { id },
-    });
-    return ingredient;
+    const { data, error } = await supabase
+      .from("ingredients")
+      .select("*")
+      .eq("id", id)
+      .single();
+    if (error) {
+      throw error;
+    }
+    return data;
   } catch (error) {
     console.error(`Error getting ingredient with ID ${id}:`, error);
     throw error;
@@ -86,8 +111,11 @@ export const getIngredient = async (id: string) => {
 
 export const getIngredients = async () => {
   try {
-    const ingredients = await prisma.ingredient.findMany();
-    return ingredients;
+    const { data, error } = await supabase.from("ingredients").select("*");
+    if (error) {
+      throw error;
+    }
+    return data;
   } catch (error) {
     console.error("Error getting ingredients:", error);
     throw error;

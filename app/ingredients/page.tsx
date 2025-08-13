@@ -1,14 +1,5 @@
 import { Content } from "./_components/content";
-import prisma from "@/lib/prisma";
-
-const getIngredients = async () => {
-  try {
-    return await prisma.ingredient.findMany();
-  } catch (error) {
-    console.error("Database operation error:", error);
-    return [];
-  }
-};
+import { getIngredients } from "../api/ingredients/actions";
 
 export default async function Ingredients() {
   const ingredients = await getIngredients();
