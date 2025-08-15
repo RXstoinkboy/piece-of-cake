@@ -1,8 +1,11 @@
+import { getIngredients } from "../api/ingredients/actions";
 import { getRecipes } from "../api/recipes/actions";
 import { Content } from "./content";
 
 export default async function Recipes() {
   const recipes = await getRecipes();
+  const ingredients = await getIngredients();
+  console.log("recipse", recipes);
 
   return (
     <main>
@@ -10,7 +13,7 @@ export default async function Recipes() {
         <h1 className="text-4xl font-bold">Przepisy</h1>
       </section>
 
-      <Content recipes={recipes} />
+      <Content recipes={recipes} ingredients={ingredients} />
     </main>
   );
 }

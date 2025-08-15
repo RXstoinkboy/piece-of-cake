@@ -57,26 +57,20 @@ export type Database = {
         Row: {
           created_at: string | null
           ingredient_id: string
-          notes: string | null
           quantity: number | null
           recipe_id: string
-          unit: string | null
         }
         Insert: {
           created_at?: string | null
           ingredient_id: string
-          notes?: string | null
           quantity?: number | null
           recipe_id: string
-          unit?: string | null
         }
         Update: {
           created_at?: string | null
           ingredient_id?: string
-          notes?: string | null
           quantity?: number | null
           recipe_id?: string
-          unit?: string | null
         }
         Relationships: [
           {

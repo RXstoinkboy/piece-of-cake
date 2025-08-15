@@ -2,15 +2,14 @@
 
 import { Database } from "@/types/supabase";
 import { Empty, EmptyButton } from "@/components/molecules/empty-state";
-import { AddRecipe } from "./_add";
-// import { List } from "./sections/list";
-// import { AddIngredient } from "./sections/modals/add";
+import { AddRecipe } from "./@add";
 
 type ContentProps = {
   recipes: Database["public"]["Tables"]["recipes"]["Row"][];
+  ingredients: Database["public"]["Tables"]["ingredients"]["Row"][];
 };
 
-export const Content = ({ recipes }: ContentProps) => {
+export const Content = ({ recipes, ingredients }: ContentProps) => {
   if (!recipes.length) {
     return (
       <div className="flex flex-col items-center justify-center h-full w-full">
@@ -18,7 +17,7 @@ export const Content = ({ recipes }: ContentProps) => {
           title="Brak przepisów"
           text="Dodaj pierwszy przepis, aby rozpocząć pracę."
           buttons={
-            <AddRecipe>
+            <AddRecipe ingredients={ingredients}>
               <EmptyButton>Dodaj przepis</EmptyButton>
             </AddRecipe>
           }
