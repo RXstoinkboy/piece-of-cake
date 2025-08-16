@@ -29,10 +29,10 @@ const FormSchema = z.object({
     .array(
       z.object({
         ingredient_id: z.string().min(1, "Nazwa składnika jest wymagana"),
-        quantity: z.number().min(0, "Ilość jest wymagana"),
+        quantity: z.number().positive("Ilość musi być większa od zera"),
       }),
     )
-    .optional(),
+    .min(1, "Musisz dodać przynajmniej jeden składnik"),
 });
 
 export function AddRecipe({ children, ingredients }: AddRecipeProps) {
@@ -51,8 +51,11 @@ export function AddRecipe({ children, ingredients }: AddRecipeProps) {
   });
 
   const onSubmit = async (data: z.infer<typeof FormSchema>) => {
-    console.log("data: ", data);
-    // await createRecipe(data);
+    const normalizedIngredients = data.ingredients.filter(
+      (ingredient) =>
+        ingredient.quantity > 0 && ingredient.ingredient_id !== "",
+    );
+    createRecipe({ ...data, ingredients: normalizedIngredients });
   };
 
   return (
@@ -69,12 +72,16 @@ export function AddRecipe({ children, ingredients }: AddRecipeProps) {
           <form onSubmit={form.handleSubmit(onSubmit)}>
             <RecipeForm form={form} ingredients={ingredients} />
             <DialogFooter>
-              <DialogClose asChild>
+              <DialogClose asChild disabled={!form.formState.isValid}>
                 <Button variant="outline">Anuluj</Button>
               </DialogClose>
-              <DialogClose asChild>
+              {form.formState.isValid ? (
+                <DialogClose asChild>
+                  <Button type="submit">Dodaj</Button>
+                </DialogClose>
+              ) : (
                 <Button type="submit">Dodaj</Button>
-              </DialogClose>
+              )}
             </DialogFooter>
           </form>
         </DialogContent>

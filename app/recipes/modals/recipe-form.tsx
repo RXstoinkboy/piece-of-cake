@@ -84,7 +84,7 @@ export const RecipeForm: FC<RecipeFormProps> = ({ form, ingredients }) => {
                     <SelectContent>
                       {ingredients.map((ing) => (
                         <SelectItem key={ing.id} value={ing.id}>
-                          {ing.name}
+                          {ing.name} ({ing.unit})
                         </SelectItem>
                       ))}
                     </SelectContent>
@@ -119,7 +119,7 @@ export const RecipeForm: FC<RecipeFormProps> = ({ form, ingredients }) => {
           </div>
         ))}
         <Button
-          onClick={() => append({ ingredientId: "", quantity: 0 })}
+          onClick={() => append({ ingredient_id: "", quantity: 0 })}
           variant="secondary"
           className="w-fit"
         >
