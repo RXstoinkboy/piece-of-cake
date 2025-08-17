@@ -8,9 +8,10 @@ import {
   TableBody,
   TableCell,
 } from "@/components/ui/table";
-import { AddRecipe } from "./@add";
+import { AddRecipe } from "./modals/add";
 import { Recipe } from "../api/recipes/actions";
 import { Ingredient } from "../api/ingredients/actions";
+import { RemoveRecipe } from "./modals/delete";
 // import { RemoveIngredient } from "../modals/delete";
 // import { EditIngredient } from "../modals/edit";
 
@@ -36,7 +37,7 @@ export const List = ({
             <TableHead>Przepis</TableHead>
             <TableHead className="w-[100px]">Opis</TableHead>
             <TableHead className="w-[100px]">
-              Cena składników (śr. 18 cm)
+              Koszt składników (śr. 18 cm)
             </TableHead>
             <TableHead className="w-[100px]">Waluta</TableHead>
             <TableHead className="w-[80px]">Akcje</TableHead>
@@ -54,12 +55,12 @@ export const List = ({
                   <Button variant="outline" size="icon">
                     <Pencil />
                   </Button>
-                </EditIngredient>
-                <RemoveIngredient ingredientId={ingredient.id}>
+                </EditIngredient>*/}
+                <RemoveRecipe recipeId={recipe.id}>
                   <Button variant="outline" size="icon">
                     <Trash2 />
                   </Button>
-                </RemoveIngredient>*/}
+                </RemoveRecipe>
               </TableCell>
             </TableRow>
           ))}

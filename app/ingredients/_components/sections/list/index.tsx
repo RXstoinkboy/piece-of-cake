@@ -1,4 +1,3 @@
-import { Ingredient } from "@/lib/generated/prisma";
 import { Button } from "@/components/ui/button";
 import { PlusCircle, Trash2, Pencil } from "lucide-react";
 import {
@@ -12,6 +11,7 @@ import {
 import { AddIngredient } from "../modals/add";
 import { RemoveIngredient } from "../modals/delete";
 import { EditIngredient } from "../modals/edit";
+import { Ingredient } from "@/app/api/ingredients/actions";
 
 export const List = ({ ingredients }: { ingredients: Ingredient[] }) => {
   return (

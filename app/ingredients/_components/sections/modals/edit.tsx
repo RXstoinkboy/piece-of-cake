@@ -1,4 +1,4 @@
-import { updateIngredient } from "@/app/api/ingredients/actions";
+import { Ingredient, updateIngredient } from "@/app/api/ingredients/actions";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -15,7 +15,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { IngredientForm } from "./ingredient-form";
-import { Ingredient } from "@/lib/generated/prisma";
 
 type EditIngredientProps = {
   children: React.ReactNode;

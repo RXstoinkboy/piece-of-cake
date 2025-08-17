@@ -164,21 +164,27 @@ export const getRecipe = async (id: string) => {
   }
 };
 
-export const getRecipes = async () => {
+export const getRecipes = async (): Promise<Recipe[]> => {
   try {
     const { data, error } = await supabase
       .from("recipes")
       .select(
-        "id, name, description, recipe_ingredients(ingredient_id(name, quantity, price, unit, currency), quantity)",
+        "id, name, description, created_at, updated_at, recipe_ingredients(ingredient_id(name, quantity, price, unit, currency), quantity)",
       );
     if (error) {
       throw error;
     }
 
-    const recipesWithIngredientsData = data.map((recipe) => {
+    const recipesWithIngredientsData: Recipe[] = data.map((recipe) => {
       const ingredients_cost = recipe.recipe_ingredients.reduce(
         (acc, { ingredient_id, quantity }) => {
-          if (!ingredient_id.price || !ingredient_id.quantity || !quantity) {
+          // Ensure ingredient_id and its properties are not null before calculation
+          if (
+            !ingredient_id ||
+            ingredient_id.price === null ||
+            ingredient_id.quantity === null ||
+            quantity === null
+          ) {
             return acc;
           }
           return (

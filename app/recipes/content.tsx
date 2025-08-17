@@ -1,13 +1,14 @@
 "use client";
 
-import { Database } from "@/types/supabase";
 import { Empty, EmptyButton } from "@/components/molecules/empty-state";
-import { AddRecipe } from "./@add";
+import { AddRecipe } from "./modals/add";
 import { List } from "./list";
+import { Recipe } from "../api/recipes/actions";
+import { Ingredient } from "../api/ingredients/actions";
 
 type ContentProps = {
-  recipes: Database["public"]["Tables"]["recipes"]["Row"][];
-  ingredients: Database["public"]["Tables"]["ingredients"]["Row"][];
+  recipes: Recipe[];
+  ingredients: Ingredient[];
 };
 
 export const Content = ({ recipes, ingredients }: ContentProps) => {

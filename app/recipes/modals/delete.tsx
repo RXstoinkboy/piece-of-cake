@@ -1,4 +1,4 @@
-import { deleteIngredient, Ingredient } from "@/app/api/ingredients/actions";
+import { deleteRecipe, Recipe } from "@/app/api/recipes/actions";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -11,17 +11,14 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 
-type RemoveIngredientProps = {
-  ingredientId: Ingredient["id"];
+type RemoveRecipeProps = {
+  recipeId: Recipe["id"];
   children: React.ReactNode;
 };
 
-export function RemoveIngredient({
-  ingredientId,
-  children,
-}: RemoveIngredientProps) {
+export function RemoveRecipe({ recipeId, children }: RemoveRecipeProps) {
   const onRemove = async () => {
-    await deleteIngredient(ingredientId);
+    await deleteRecipe(recipeId);
   };
 
   return (
@@ -29,9 +26,9 @@ export function RemoveIngredient({
       <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Usun składnik</DialogTitle>
+          <DialogTitle>Usun przepis</DialogTitle>
           <DialogDescription>
-            Czy na pewno chcesz usunąć ten składnik?
+            Czy na pewno chcesz usunąć ten przepis?
           </DialogDescription>
         </DialogHeader>
         <DialogFooter>
