@@ -3,6 +3,7 @@
 import { Database } from "@/types/supabase";
 import { Empty, EmptyButton } from "@/components/molecules/empty-state";
 import { AddRecipe } from "./@add";
+import { List } from "./list";
 
 type ContentProps = {
   recipes: Database["public"]["Tables"]["recipes"]["Row"][];
@@ -26,5 +27,5 @@ export const Content = ({ recipes, ingredients }: ContentProps) => {
     );
   }
 
-  // return <List recipes={recipes} />;
+  return <List recipes={recipes} ingredients={ingredients} />;
 };

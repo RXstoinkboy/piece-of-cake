@@ -17,6 +17,7 @@ type CreateRecipePayload = RecipeInsert & {
 type UpdateRecipePayload = RecipeUpdate & {
   ingredients?: IngredientForRecipeInsert[];
 };
+export type Recipe = Database["public"]["Tables"]["recipes"]["Row"];
 
 export const createRecipe = async ({
   name,
