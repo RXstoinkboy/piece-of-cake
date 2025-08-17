@@ -17,7 +17,21 @@ type CreateRecipePayload = RecipeInsert & {
 type UpdateRecipePayload = RecipeUpdate & {
   ingredients?: IngredientForRecipeInsert[];
 };
-export type Recipe = Database["public"]["Tables"]["recipes"]["Row"];
+type IngredientDetails = Pick<
+  Database["public"]["Tables"]["ingredients"]["Row"],
+  "name" | "quantity" | "price" | "unit" | "currency"
+>;
+
+type RecipeIngredientJoin = {
+  ingredient_id: IngredientDetails;
+  quantity: Database["public"]["Tables"]["recipe_ingredients"]["Row"]["quantity"];
+};
+
+export type Recipe = Database["public"]["Tables"]["recipes"]["Row"] & {
+  recipe_ingredients: RecipeIngredientJoin[];
+  ingredients_cost: number;
+  ingredients_cost_currency: string;
+};
 
 export const createRecipe = async ({
   name,
@@ -101,8 +115,6 @@ export const updateRecipe = async ({
       recipe_id: id,
       ingredient_id: ingredient.ingredient_id,
       quantity: ingredient.quantity,
-      unit: ingredient.unit,
-      notes: ingredient.notes,
     }));
 
     const { error: newRecipeIngredientsError } = await supabase
@@ -154,11 +166,36 @@ export const getRecipe = async (id: string) => {
 
 export const getRecipes = async () => {
   try {
-    const { data, error } = await supabase.from("recipes").select("*");
+    const { data, error } = await supabase
+      .from("recipes")
+      .select(
+        "id, name, description, recipe_ingredients(ingredient_id(name, quantity, price, unit, currency), quantity)",
+      );
     if (error) {
       throw error;
     }
-    return data;
+
+    const recipesWithIngredientsData = data.map((recipe) => {
+      const ingredients_cost = recipe.recipe_ingredients.reduce(
+        (acc, { ingredient_id, quantity }) => {
+          if (!ingredient_id.price || !ingredient_id.quantity || !quantity) {
+            return acc;
+          }
+          return (
+            acc + quantity * (ingredient_id.price / ingredient_id.quantity)
+          );
+        },
+        0,
+      );
+      return {
+        ...recipe,
+        ingredients_cost,
+        // TODO: might be recalculated based on ingredient prices and their currency
+        ingredients_cost_currency: "PLN",
+      };
+    });
+
+    return recipesWithIngredientsData;
   } catch (error) {
     console.error("Error getting recipes:", error);
     throw error;

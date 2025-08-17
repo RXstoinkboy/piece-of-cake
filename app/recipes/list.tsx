@@ -21,12 +21,13 @@ export const List = ({
   recipes: Recipe[];
   ingredients: Ingredient[];
 }) => {
+  console.log("recipes", recipes);
   return (
     <div className="flex flex-col gap-4">
       <AddRecipe ingredients={ingredients}>
         <Button variant="outline" className="w-fit">
           <PlusCircle />
-          Dodaj składnik
+          Dodaj przepis
         </Button>
       </AddRecipe>
       <Table>
@@ -34,9 +35,10 @@ export const List = ({
           <TableRow>
             <TableHead>Przepis</TableHead>
             <TableHead className="w-[100px]">Opis</TableHead>
-            {/*<TableHead className="w-[100px]">Jednostka</TableHead>
-            <TableHead className="w-[100px]">Cena</TableHead>
-            <TableHead className="w-[100px]">Waluta</TableHead>*/}
+            <TableHead className="w-[100px]">
+              Cena składników (śr. 18 cm)
+            </TableHead>
+            <TableHead className="w-[100px]">Waluta</TableHead>
             <TableHead className="w-[80px]">Akcje</TableHead>
           </TableRow>
         </TableHeader>
@@ -45,9 +47,8 @@ export const List = ({
             <TableRow key={recipe.id}>
               <TableCell>{recipe.name}</TableCell>
               <TableCell>{recipe.description}</TableCell>
-              {/*<TableCell>{recipe.unit}</TableCell>
-              <TableCell>{recipe.price}</TableCell>
-              <TableCell>{recipe.currency}</TableCell>*/}
+              <TableCell>{recipe.ingredients_cost}</TableCell>
+              <TableCell>{recipe.ingredients_cost_currency}</TableCell>
               <TableCell className="mr-0 flex gap-2">
                 {/*<EditIngredient ingredient={ingredient}>
                   <Button variant="outline" size="icon">

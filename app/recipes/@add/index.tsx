@@ -66,7 +66,7 @@ export function AddRecipe({ children, ingredients }: AddRecipeProps) {
           <DialogHeader>
             <DialogTitle>Dodaj przepis</DialogTitle>
             <DialogDescription>
-              Podaj listę składników przepisu
+              Podaj listę składników przepisu dla średnicy 18 cm
             </DialogDescription>
           </DialogHeader>
           <form onSubmit={form.handleSubmit(onSubmit)}>
