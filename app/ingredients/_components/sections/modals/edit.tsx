@@ -54,9 +54,13 @@ export function EditIngredient({ children, ingredient }: EditIngredientProps) {
               <DialogClose asChild>
                 <Button variant="outline">Anuluj</Button>
               </DialogClose>
-              <DialogClose asChild>
+              {form.formState.isValid ? (
+                <DialogClose asChild>
+                  <Button type="submit">Edytuj</Button>
+                </DialogClose>
+              ) : (
                 <Button type="submit">Edytuj</Button>
-              </DialogClose>
+              )}
             </DialogFooter>
           </form>
         </DialogContent>

@@ -12,6 +12,7 @@ import { AddRecipe } from "./modals/add";
 import { Recipe } from "../api/recipes/actions";
 import { Ingredient } from "../api/ingredients/actions";
 import { RemoveRecipe } from "./modals/delete";
+import { EditRecipe } from "./modals/edit";
 // import { RemoveIngredient } from "../modals/delete";
 // import { EditIngredient } from "../modals/edit";
 
@@ -22,7 +23,6 @@ export const List = ({
   recipes: Recipe[];
   ingredients: Ingredient[];
 }) => {
-  console.log("recipes", recipes);
   return (
     <div className="flex flex-col gap-4">
       <AddRecipe ingredients={ingredients}>
@@ -51,11 +51,11 @@ export const List = ({
               <TableCell>{recipe.ingredients_cost}</TableCell>
               <TableCell>{recipe.ingredients_cost_currency}</TableCell>
               <TableCell className="mr-0 flex gap-2">
-                {/*<EditIngredient ingredient={ingredient}>
+                <EditRecipe ingredients={ingredients} recipe={recipe}>
                   <Button variant="outline" size="icon">
                     <Pencil />
                   </Button>
-                </EditIngredient>*/}
+                </EditRecipe>
                 <RemoveRecipe recipeId={recipe.id}>
                   <Button variant="outline" size="icon">
                     <Trash2 />

@@ -9,6 +9,8 @@ type IngredientForRecipeInsert = Omit<
   Database["public"]["Tables"]["recipe_ingredients"]["Insert"],
   "recipe_id"
 >;
+type IngredientForRecipeUpdate =
+  Database["public"]["Tables"]["recipe_ingredients"]["Insert"];
 type RecipeUpdate = Database["public"]["Tables"]["recipes"]["Update"];
 
 type CreateRecipePayload = RecipeInsert & {
@@ -19,7 +21,7 @@ type UpdateRecipePayload = RecipeUpdate & {
 };
 type IngredientDetails = Pick<
   Database["public"]["Tables"]["ingredients"]["Row"],
-  "name" | "quantity" | "price" | "unit" | "currency"
+  "name" | "quantity" | "price" | "unit" | "currency" | "id"
 >;
 
 type RecipeIngredientJoin = {
@@ -99,9 +101,7 @@ export const updateRecipe = async ({
     const { error: recipeIngredientsError } = await supabase
       .from("recipe_ingredients")
       .delete()
-      .eq("recipe_id", id)
-      .select()
-      .single();
+      .eq("recipe_id", id);
     if (recipeIngredientsError) {
       throw recipeIngredientsError;
     }
@@ -111,23 +111,24 @@ export const updateRecipe = async ({
       return { ...recipeData, ingredients: [] };
     }
 
-    const ingredientsToInsert = ingredients.map((ingredient) => ({
-      recipe_id: id,
-      ingredient_id: ingredient.ingredient_id,
-      quantity: ingredient.quantity,
-    }));
+    const ingredientsToInsert: IngredientForRecipeUpdate[] = ingredients.map(
+      (ingredient) => ({
+        recipe_id: id,
+        ingredient_id: ingredient.ingredient_id,
+        quantity: ingredient.quantity,
+      }),
+    );
 
     const { error: newRecipeIngredientsError } = await supabase
       .from("recipe_ingredients")
       .insert(ingredientsToInsert)
-      .select()
-      .single();
+      .select();
     if (newRecipeIngredientsError) {
       throw newRecipeIngredientsError;
     }
 
     revalidatePath("/recipes");
-    return { ...recipeData, ingredients: ingredientsToInsert };
+    return { ...recipeData, recipe_ingredients: ingredientsToInsert };
   } catch (error) {
     console.error(`Error updating recipe with ID ${id}:`, error);
     throw error;
@@ -169,7 +170,7 @@ export const getRecipes = async (): Promise<Recipe[]> => {
     const { data, error } = await supabase
       .from("recipes")
       .select(
-        "id, name, description, created_at, updated_at, recipe_ingredients(ingredient_id(name, quantity, price, unit, currency), quantity)",
+        "id, name, description, created_at, updated_at, recipe_ingredients(ingredient_id(id, name, quantity, price, unit, currency), quantity)",
       );
     if (error) {
       throw error;
