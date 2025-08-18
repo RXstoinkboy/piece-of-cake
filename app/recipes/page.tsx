@@ -5,7 +5,6 @@ import { Content } from "./content";
 export default async function Recipes() {
   const recipes = await getRecipes();
   const ingredients = await getIngredients();
-  console.log("recipse", recipes);
 
   return (
     <main>
