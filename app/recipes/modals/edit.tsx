@@ -84,13 +84,13 @@ export function EditRecipe({ children, ingredients, recipe }: EditRecipeProps) {
               <DialogClose asChild disabled={!form.formState.isValid}>
                 <Button variant="outline">Anuluj</Button>
               </DialogClose>
-              {/*{form.formState.isValid ? (
+              {form.formState.isValid ? (
                 <DialogClose asChild>
                   <Button type="submit">Edytuj</Button>
                 </DialogClose>
-              ) : (*/}
-              <Button type="submit">Edytuj</Button>
-              {/*)}*/}
+              ) : (
+                <Button type="submit">Edytuj</Button>
+              )}
             </DialogFooter>
           </form>
         </DialogContent>
