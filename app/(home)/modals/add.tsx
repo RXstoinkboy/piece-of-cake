@@ -16,6 +16,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { CakeForm } from "./cake-form";
+import { createCake } from "@/app/api/cakes/actions";
 // import { RecipeForm } from "./recipe-form";
 
 type AddCakeProps = {
@@ -26,7 +27,7 @@ type AddCakeProps = {
 const FormSchema = z.object({
   name: z.string().min(1, "Nazwa jest wymagana"),
   description: z.string().min(0).optional(),
-  components: z
+  recipeIds: z
     .array(z.string())
     .min(1, "Musisz dodać przynajmniej jeden składnik tortu"),
 });
@@ -37,12 +38,16 @@ export function AddCake({ children, recipes }: AddCakeProps) {
     defaultValues: {
       name: "",
       description: "",
-      components: [" "],
+      recipeIds: [" "],
     },
   });
 
   const onSubmit = async (data: z.infer<typeof FormSchema>) => {
-    console.log("dodany tort", data);
+    const normalizedData = {
+      ...data,
+      recipeIds: data.recipeIds.filter((id) => id.trim().length > 0),
+    };
+    createCake(normalizedData);
   };
 
   return (

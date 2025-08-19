@@ -28,7 +28,7 @@ type CakeFormProps = {
 export const CakeForm: FC<CakeFormProps> = ({ form, recipes }) => {
   const { fields, append, remove } = useFieldArray({
     control: form.control,
-    name: "components",
+    name: "recipeIds",
   });
 
   return (
@@ -64,8 +64,8 @@ export const CakeForm: FC<CakeFormProps> = ({ form, recipes }) => {
         />
       </div>
       <div className="grid gap-display3">
-        {fields.map((component, index) => (
-          <div key={component.id} className="flex gap-4 items-end mb-4">
+        {fields.map((recipeId, index) => (
+          <div key={recipeId.id} className="flex gap-4 items-end mb-4">
             <FormField
               control={form.control}
               name={`components.${index}`}

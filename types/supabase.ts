@@ -9,6 +9,63 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      cake_recipes: {
+        Row: {
+          cake_id: string
+          created_at: string | null
+          recipe_id: string
+        }
+        Insert: {
+          cake_id: string
+          created_at?: string | null
+          recipe_id: string
+        }
+        Update: {
+          cake_id?: string
+          created_at?: string | null
+          recipe_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cake_recipes_cake_id_fkey"
+            columns: ["cake_id"]
+            isOneToOne: false
+            referencedRelation: "cakes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cake_recipes_recipe_id_fkey"
+            columns: ["recipe_id"]
+            isOneToOne: false
+            referencedRelation: "recipes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      cakes: {
+        Row: {
+          created_at: string | null
+          description: string | null
+          id: string
+          name: string
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          name: string
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          name?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       ingredients: {
         Row: {
           created_at: string | null
