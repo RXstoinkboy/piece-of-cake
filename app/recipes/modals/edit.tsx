@@ -81,7 +81,7 @@ export function EditRecipe({ children, ingredients, recipe }: EditRecipeProps) {
           <form onSubmit={form.handleSubmit(onSubmit)}>
             <RecipeForm form={form} ingredients={ingredients} />
             <DialogFooter>
-              <DialogClose asChild disabled={!form.formState.isValid}>
+              <DialogClose asChild>
                 <Button variant="outline">Anuluj</Button>
               </DialogClose>
               {form.formState.isValid ? (

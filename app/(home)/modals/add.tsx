@@ -1,4 +1,5 @@
-import { createRecipe } from "@/app/api/recipes/actions";
+// import { createRecipe } from "@/app/api/recipes/actions";
+import { Recipe } from "@/app/api/recipes/actions";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -14,48 +15,34 @@ import { Form } from "@/components/ui/form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { RecipeForm } from "./recipe-form";
-import { Database } from "@/types/supabase";
+import { CakeForm } from "./cake-form";
+// import { RecipeForm } from "./recipe-form";
 
-type AddRecipeProps = {
+type AddCakeProps = {
   children: React.ReactNode;
-  ingredients: Database["public"]["Tables"]["ingredients"]["Row"][];
+  recipes: Recipe[];
 };
 
 const FormSchema = z.object({
   name: z.string().min(1, "Nazwa jest wymagana"),
   description: z.string().min(0).optional(),
-  ingredients: z
-    .array(
-      z.object({
-        ingredient_id: z.string().min(1, "Nazwa składnika jest wymagana"),
-        quantity: z.number().positive("Ilość musi być większa od zera"),
-      }),
-    )
-    .min(1, "Musisz dodać przynajmniej jeden składnik"),
+  components: z
+    .array(z.string())
+    .min(1, "Musisz dodać przynajmniej jeden składnik tortu"),
 });
 
-export function AddRecipe({ children, ingredients }: AddRecipeProps) {
+export function AddCake({ children, recipes }: AddCakeProps) {
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
       name: "",
       description: "",
-      ingredients: [
-        {
-          ingredient_id: "",
-          quantity: 0,
-        },
-      ],
+      components: [" "],
     },
   });
 
   const onSubmit = async (data: z.infer<typeof FormSchema>) => {
-    const normalizedIngredients = data.ingredients.filter(
-      (ingredient) =>
-        ingredient.quantity > 0 && ingredient.ingredient_id !== "",
-    );
-    createRecipe({ ...data, ingredients: normalizedIngredients });
+    console.log("dodany tort", data);
   };
 
   return (
@@ -64,13 +51,13 @@ export function AddRecipe({ children, ingredients }: AddRecipeProps) {
         <DialogTrigger asChild>{children}</DialogTrigger>
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
-            <DialogTitle>Dodaj przepis</DialogTitle>
+            <DialogTitle>Dodaj tort</DialogTitle>
             <DialogDescription>
-              Podaj listę składników przepisu dla średnicy 18 cm
+              Wpisz dane na temat swojego tortu
             </DialogDescription>
           </DialogHeader>
           <form onSubmit={form.handleSubmit(onSubmit)}>
-            <RecipeForm form={form} ingredients={ingredients} />
+            <CakeForm form={form} recipes={recipes} />
             <DialogFooter>
               <DialogClose asChild>
                 <Button variant="outline">Anuluj</Button>
