@@ -13,8 +13,6 @@ import { Recipe } from "../api/recipes/actions";
 import { Ingredient } from "../api/ingredients/actions";
 import { RemoveRecipe } from "./modals/delete";
 import { EditRecipe } from "./modals/edit";
-// import { RemoveIngredient } from "../modals/delete";
-// import { EditIngredient } from "../modals/edit";
 
 export const List = ({
   recipes,

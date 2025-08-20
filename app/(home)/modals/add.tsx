@@ -43,6 +43,11 @@ export function AddCake({ children, recipes }: AddCakeProps) {
   });
 
   const onSubmit = async (data: z.infer<typeof FormSchema>) => {
+    console.log("on submit", data);
+    console.log(
+      "recipeIds normalized",
+      data.recipeIds.filter((id) => id.trim().length > 0),
+    );
     const normalizedData = {
       ...data,
       recipeIds: data.recipeIds.filter((id) => id.trim().length > 0),

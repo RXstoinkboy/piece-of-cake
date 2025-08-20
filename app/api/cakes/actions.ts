@@ -10,9 +10,11 @@ type CakeRecipeInsert = Database["public"]["Tables"]["cake_recipes"]["Insert"];
 type CreateCakePayload = CakeInsert & {
   recipeIds?: string[];
 };
+type CakeSelect = Database["public"]["Tables"]["cakes"]["Row"];
+type RecipeRow = Database["public"]["Tables"]["recipes"]["Row"];
 
-export type Cake = Database["public"]["Tables"]["cakes"]["Row"] & {
-  cake_recipes: { recipe_id: string }[];
+export type Cake = CakeSelect & {
+  cake_recipes: { recipe_id: Pick<RecipeRow, "id" | "name"> }[];
 };
 
 export const createCake = async ({
@@ -35,7 +37,7 @@ export const createCake = async ({
     const newCakeId = cakeData?.id;
 
     if (!recipeIds?.length || !newCakeId) {
-      revalidatePath("/cakes");
+      revalidatePath("/");
       return { ...cakeData, cake_recipes: [] };
     }
 
@@ -54,10 +56,28 @@ export const createCake = async ({
       throw cakeRecipesError;
     }
 
-    revalidatePath("/cakes");
+    revalidatePath("/");
     return { ...cakeData, cake_recipes: cakeRecipesToInsert };
   } catch (error) {
     console.error("Error creating cake with recipes:", error);
+    throw error;
+  }
+};
+
+export const getCakes = async () => {
+  try {
+    const { data, error } = await supabase
+      .from("cakes")
+      .select("*, cake_recipes(recipe_id(name, id))")
+      .order("created_at", { ascending: false });
+
+    if (error) {
+      throw error;
+    }
+
+    return data;
+  } catch (error) {
+    console.error("Error fetching cakes:", error);
     throw error;
   }
 };

@@ -1,12 +1,11 @@
 import { HeartHandshake } from "lucide-react";
-import { RecipeCard } from "./cake-recipe-card";
-import { Empty, EmptyButton } from "@/components/molecules/empty-state";
-import { AddCake } from "./modals/add";
 import { getRecipes } from "../api/recipes/actions";
 import { Content } from "./content";
+import { getCakes } from "../api/cakes/actions";
 
 export default async function Home() {
   const recipes = await getRecipes();
+  const cakes = await getCakes();
 
   return (
     <main>
@@ -15,7 +14,7 @@ export default async function Home() {
         <h1 className="text-4xl font-bold">Cześć, Kochanie!</h1>
       </section>
 
-      <Content recipes={recipes} />
+      <Content recipes={recipes} cakes={cakes} />
     </main>
   );
 }

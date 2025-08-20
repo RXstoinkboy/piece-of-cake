@@ -14,7 +14,7 @@ type ContentProps = {
 export const Content = ({ recipes, ingredients }: ContentProps) => {
   if (!recipes.length) {
     return (
-      <div className="flex flex-col items-center justify-center h-full w-full">
+      <div className="p-4 w-full max-w-5xl mx-auto">
         <Empty
           title="Brak przepisów"
           text="Dodaj pierwszy przepis, aby rozpocząć pracę."

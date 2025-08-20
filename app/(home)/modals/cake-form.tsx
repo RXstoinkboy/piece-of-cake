@@ -68,7 +68,7 @@ export const CakeForm: FC<CakeFormProps> = ({ form, recipes }) => {
           <div key={recipeId.id} className="flex gap-4 items-end mb-4">
             <FormField
               control={form.control}
-              name={`components.${index}`}
+              name={`recipeIds.${index}`}
               render={({ field }) => (
                 <FormItem className="flex-grow">
                   <FormLabel>Składnik</FormLabel>
