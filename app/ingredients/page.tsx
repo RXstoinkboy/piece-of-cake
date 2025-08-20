@@ -1,5 +1,5 @@
 import { Content } from "./_components/content";
-import { getIngredients } from "../api/ingredients/actions";
+import { getIngredients } from "@/app/api/ingredients/actions";
 
 export default async function Ingredients() {
   const ingredients = await getIngredients();

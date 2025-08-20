@@ -2,7 +2,6 @@
 
 import { Empty, EmptyButton } from "@/components/molecules/empty-state";
 import { AddCake } from "./modals/add";
-import { RecipeCard } from "./cake-recipe-card";
 import { Recipe } from "../api/recipes/actions";
 import { Cake } from "../api/cakes/actions";
 import { List } from "./list";

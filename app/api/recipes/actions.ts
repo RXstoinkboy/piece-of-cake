@@ -3,6 +3,7 @@
 import { supabase } from "@/lib/supabase";
 import { revalidatePath } from "next/cache";
 import { Database } from "@/types/supabase";
+import { getRecipeIngredients } from "./utils";
 
 type RecipeInsert = Database["public"]["Tables"]["recipes"]["Insert"];
 type IngredientForRecipeInsert = Omit<
@@ -176,33 +177,7 @@ export const getRecipes = async (): Promise<Recipe[]> => {
       throw error;
     }
 
-    const recipesWithIngredientsData: Recipe[] = data.map((recipe) => {
-      const ingredients_cost = recipe.recipe_ingredients.reduce(
-        (acc, { ingredient_id, quantity }) => {
-          // Ensure ingredient_id and its properties are not null before calculation
-          if (
-            !ingredient_id ||
-            ingredient_id.price === null ||
-            ingredient_id.quantity === null ||
-            quantity === null
-          ) {
-            return acc;
-          }
-          return (
-            acc + quantity * (ingredient_id.price / ingredient_id.quantity)
-          );
-        },
-        0,
-      );
-      return {
-        ...recipe,
-        ingredients_cost,
-        // TODO: might be recalculated based on ingredient prices and their currency
-        ingredients_cost_currency: "PLN",
-      };
-    });
-
-    return recipesWithIngredientsData;
+    return getRecipeIngredients(data);
   } catch (error) {
     console.error("Error getting recipes:", error);
     throw error;

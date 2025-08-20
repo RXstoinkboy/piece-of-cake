@@ -6,16 +6,34 @@ import { Slider } from "@/components/ui/slider";
 import { CircleOff, Pencil, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { Cake } from "../api/cakes/actions";
+import { Recipe } from "../api/recipes/actions";
 
 type RecipeCardProps = {
   cake: Cake;
+  recipes: Recipe[];
 };
 
-export const RecipeCard = ({ cake }: RecipeCardProps) => {
+export const RecipeCard = ({ cake, recipes }: RecipeCardProps) => {
   const [value, setValue] = useState([18]);
   const onChange = (newValue: number[]) => {
     setValue(newValue);
   };
+
+  const totalPriceForDefaultDiameter = cake.cake_recipes.reduce(
+    (acc, { recipe_id }) => {
+      const recipe = recipes.find((recipe) => recipe.id === recipe_id.id);
+      return acc + (recipe?.ingredients_cost || 0);
+    },
+    0,
+  );
+
+  const calculatePriceForDiameter = (diameter: number) => {
+    const defaultDiameter = 18;
+    const priceRatio =
+      (Math.PI * diameter ** 2) / 4 / ((Math.PI * defaultDiameter ** 2) / 4);
+    return totalPriceForDefaultDiameter * priceRatio;
+  };
+  const priceForDiameter = calculatePriceForDiameter(value[0]);
 
   return (
     <Card className="min-w-full max-w-sm mb-2 ">
@@ -37,7 +55,9 @@ export const RecipeCard = ({ cake }: RecipeCardProps) => {
           </ul>
           <section className="flex-1 flex flex-col items-end justify-center gap-3">
             <article className="flex gap-1 items-end">
-              <h2 className="text-6xl font-bold">40</h2>
+              <h2 className="text-6xl font-bold">
+                {priceForDiameter.toFixed(2)}
+              </h2>
               <h3 className="text-2xl font-semibold">PLN</h3>
             </article>
             <Slider
