@@ -15,28 +15,29 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { CakeForm } from "./cake-form";
-import { createCake } from "@/app/api/cakes/actions";
+import { Cake, createCake } from "@/app/api/cakes/actions";
 
-type AddCakeProps = {
+type EditCakeProps = {
   children: React.ReactNode;
   recipes: Recipe[];
+  cake: Cake;
 };
 
 const FormSchema = z.object({
   name: z.string().min(1, "Nazwa jest wymagana"),
-  description: z.string().min(0).optional(),
+  description: z.string().optional(),
   recipeIds: z
     .array(z.string())
     .min(1, "Musisz dodać przynajmniej jeden składnik tortu"),
 });
 
-export function AddCake({ children, recipes }: AddCakeProps) {
+export function EditCake({ children, recipes, cake }: EditCakeProps) {
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
-      name: "",
-      description: "",
-      recipeIds: [" "],
+      name: cake.name,
+      description: cake.description || undefined,
+      recipeIds: cake.cake_recipes.map(({ recipe_id }) => recipe_id.id),
     },
   });
 
@@ -54,7 +55,7 @@ export function AddCake({ children, recipes }: AddCakeProps) {
         <DialogTrigger asChild>{children}</DialogTrigger>
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
-            <DialogTitle>Dodaj tort</DialogTitle>
+            <DialogTitle>Edytuj tort</DialogTitle>
             <DialogDescription>
               Wpisz dane na temat swojego tortu
             </DialogDescription>
@@ -67,10 +68,10 @@ export function AddCake({ children, recipes }: AddCakeProps) {
               </DialogClose>
               {form.formState.isValid ? (
                 <DialogClose asChild>
-                  <Button type="submit">Dodaj</Button>
+                  <Button type="submit">Edytuj</Button>
                 </DialogClose>
               ) : (
-                <Button type="submit">Dodaj</Button>
+                <Button type="submit">Edytuj</Button>
               )}
             </DialogFooter>
           </form>

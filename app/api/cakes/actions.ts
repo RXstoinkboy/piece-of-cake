@@ -81,3 +81,21 @@ export const getCakes = async () => {
     throw error;
   }
 };
+
+export const deleteCake = async (id: string) => {
+  try {
+    const { error: cakeError } = await supabase
+      .from("cakes")
+      .delete()
+      .eq("id", id);
+
+    if (cakeError) {
+      throw cakeError;
+    }
+
+    revalidatePath("/");
+  } catch (error) {
+    console.error("Error deleting cake:", error);
+    throw error;
+  }
+};

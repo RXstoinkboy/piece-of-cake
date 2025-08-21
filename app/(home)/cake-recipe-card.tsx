@@ -7,6 +7,8 @@ import { CircleOff, Pencil, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { Cake } from "../api/cakes/actions";
 import { Recipe } from "../api/recipes/actions";
+import { RemoveCake } from "./modals/delete";
+import { EditCake } from "./modals/edit";
 
 type RecipeCardProps = {
   cake: Cake;
@@ -40,12 +42,16 @@ export const RecipeCard = ({ cake, recipes }: RecipeCardProps) => {
       <CardHeader>
         <CardTitle className="flex gap-2 items-center">
           {cake.name}
-          <Button variant="outline" size="icon">
-            <Pencil />
-          </Button>
-          <Button variant="outline" size="icon">
-            <Trash2 />
-          </Button>
+          <EditCake recipes={recipes} cake={cake}>
+            <Button variant="outline" size="icon">
+              <Pencil />
+            </Button>
+          </EditCake>
+          <RemoveCake cakeId={cake.id}>
+            <Button variant="outline" size="icon">
+              <Trash2 />
+            </Button>
+          </RemoveCake>
         </CardTitle>
         <CardContent className="grid grid-cols-2 px-0 gap-8">
           <ul>
