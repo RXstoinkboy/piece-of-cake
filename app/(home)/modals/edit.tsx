@@ -15,7 +15,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { CakeForm } from "./cake-form";
-import { Cake, createCake } from "@/app/api/cakes/actions";
+import { Cake, createCake, updateCake } from "@/app/api/cakes/actions";
 
 type EditCakeProps = {
   children: React.ReactNode;
@@ -46,7 +46,7 @@ export function EditCake({ children, recipes, cake }: EditCakeProps) {
       ...data,
       recipeIds: data.recipeIds.filter((id) => id.trim().length > 0),
     };
-    createCake(normalizedData);
+    updateCake({ id: cake.id, ...normalizedData });
   };
 
   return (

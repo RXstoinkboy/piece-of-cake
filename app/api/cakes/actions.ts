@@ -5,11 +5,18 @@ import { revalidatePath } from "next/cache";
 import { Database } from "@/types/supabase";
 
 type CakeInsert = Database["public"]["Tables"]["cakes"]["Insert"];
+type CakeUpdate = Database["public"]["Tables"]["cakes"]["Update"];
 type CakeRecipeInsert = Database["public"]["Tables"]["cake_recipes"]["Insert"];
 
 type CreateCakePayload = CakeInsert & {
   recipeIds?: string[];
 };
+
+type UpdateCakePayload = CakeUpdate & {
+  id: string;
+  recipeIds?: string[];
+};
+
 type CakeSelect = Database["public"]["Tables"]["cakes"]["Row"];
 type RecipeRow = Database["public"]["Tables"]["recipes"]["Row"];
 
@@ -60,6 +67,64 @@ export const createCake = async ({
     return { ...cakeData, cake_recipes: cakeRecipesToInsert };
   } catch (error) {
     console.error("Error creating cake with recipes:", error);
+    throw error;
+  }
+};
+
+export const updateCake = async ({
+  id,
+  recipeIds,
+  ...cakeUpdateData
+}: UpdateCakePayload) => {
+  try {
+    // 1. Update the cake
+    const { data: updatedCakeData, error: cakeError } = await supabase
+      .from("cakes")
+      .update(cakeUpdateData)
+      .eq("id", id)
+      .select()
+      .single();
+
+    if (cakeError) {
+      throw cakeError;
+    }
+
+    // 2. Delete old cake_recipes to sync with new recipeIds
+    const { error: deleteError } = await supabase
+      .from("cake_recipes")
+      .delete()
+      .eq("cake_id", id);
+
+    if (deleteError) {
+      throw deleteError;
+    }
+
+    const updatedCakeId = updatedCakeData?.id;
+
+    if (!recipeIds?.length || !updatedCakeId) {
+      revalidatePath("/");
+      return { ...updatedCakeData, cake_recipes: [] };
+    }
+
+    const cakeRecipesToInsert: CakeRecipeInsert[] = recipeIds.map(
+      (recipeId) => ({
+        cake_id: updatedCakeId,
+        recipe_id: recipeId,
+      }),
+    );
+
+    const { error: cakeRecipesError } = await supabase
+      .from("cake_recipes")
+      .insert(cakeRecipesToInsert);
+
+    if (cakeRecipesError) {
+      throw cakeRecipesError;
+    }
+
+    revalidatePath("/");
+    return { ...updatedCakeData, cake_recipes: cakeRecipesToInsert };
+  } catch (error) {
+    console.error("Error updating cake with recipes:", error);
     throw error;
   }
 };
