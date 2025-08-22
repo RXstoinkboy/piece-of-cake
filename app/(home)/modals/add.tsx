@@ -25,8 +25,13 @@ type AddCakeProps = {
 const FormSchema = z.object({
   name: z.string().min(1, "Nazwa jest wymagana"),
   description: z.string().min(0).optional(),
-  recipeIds: z
-    .array(z.string())
+  recipes: z
+    .array(
+      z.object({
+        recipe_id: z.string(),
+        order: z.number(),
+      }),
+    )
     .min(1, "Musisz dodać przynajmniej jeden składnik tortu"),
 });
 
@@ -36,14 +41,21 @@ export function AddCake({ children, recipes }: AddCakeProps) {
     defaultValues: {
       name: "",
       description: "",
-      recipeIds: [" "],
+      recipes: [
+        {
+          recipe_id: "",
+          order: 0,
+        },
+      ],
     },
   });
 
   const onSubmit = async (data: z.infer<typeof FormSchema>) => {
     const normalizedData = {
       ...data,
-      recipeIds: data.recipeIds.filter((id) => id.trim().length > 0),
+      recipes: data.recipes.filter(
+        ({ recipe_id }) => recipe_id.trim().length > 0,
+      ),
     };
     createCake(normalizedData);
   };

@@ -15,7 +15,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { CakeForm } from "./cake-form";
-import { Cake, createCake, updateCake } from "@/app/api/cakes/actions";
+import { Cake, updateCake } from "@/app/api/cakes/actions";
 
 type EditCakeProps = {
   children: React.ReactNode;
@@ -26,25 +26,44 @@ type EditCakeProps = {
 const FormSchema = z.object({
   name: z.string().min(1, "Nazwa jest wymagana"),
   description: z.string().optional(),
-  recipeIds: z
-    .array(z.string())
+  recipes: z
+    .array(
+      z.object({
+        recipe_id: z.string(),
+        order: z.number(),
+      }),
+    )
     .min(1, "Musisz dodać przynajmniej jeden składnik tortu"),
 });
 
 export function EditCake({ children, recipes, cake }: EditCakeProps) {
+  console.log("edit", cake);
+  console.log(
+    "mapping",
+    cake.cake_recipes.map(({ recipe_id, order }) => ({
+      recipe_id: recipe_id.id,
+      order: order,
+    })),
+  );
+
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
       name: cake.name,
       description: cake.description || undefined,
-      recipeIds: cake.cake_recipes.map(({ recipe_id }) => recipe_id.id),
+      recipes: cake.cake_recipes.map(({ recipe_id, order }) => ({
+        recipe_id: recipe_id.id,
+        order: order,
+      })),
     },
   });
 
   const onSubmit = async (data: z.infer<typeof FormSchema>) => {
     const normalizedData = {
       ...data,
-      recipeIds: data.recipeIds.filter((id) => id.trim().length > 0),
+      recipes: data.recipes.filter(
+        ({ recipe_id }) => recipe_id.trim().length > 0,
+      ),
     };
     updateCake({ id: cake.id, ...normalizedData });
   };

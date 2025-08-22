@@ -9,25 +9,25 @@ type CakeUpdate = Database["public"]["Tables"]["cakes"]["Update"];
 type CakeRecipeInsert = Database["public"]["Tables"]["cake_recipes"]["Insert"];
 
 type CreateCakePayload = CakeInsert & {
-  recipeIds?: string[];
+  recipes?: Pick<CakeRecipeInsert, "order" | "recipe_id">[];
 };
 
 type UpdateCakePayload = CakeUpdate & {
   id: string;
-  recipeIds?: string[];
+  recipes?: Pick<CakeRecipeInsert, "order" | "recipe_id">[];
 };
 
 type CakeSelect = Database["public"]["Tables"]["cakes"]["Row"];
 type RecipeRow = Database["public"]["Tables"]["recipes"]["Row"];
 
 export type Cake = CakeSelect & {
-  cake_recipes: { recipe_id: Pick<RecipeRow, "id" | "name"> }[];
+  cake_recipes: { recipe_id: Pick<RecipeRow, "id" | "name">; order: number }[];
 };
 
 export const createCake = async ({
   name,
   description,
-  recipeIds,
+  recipes,
 }: CreateCakePayload) => {
   try {
     // 1. Insert the new cake
@@ -43,17 +43,16 @@ export const createCake = async ({
 
     const newCakeId = cakeData?.id;
 
-    if (!recipeIds?.length || !newCakeId) {
+    if (!recipes?.length || !newCakeId) {
       revalidatePath("/");
       return { ...cakeData, cake_recipes: [] };
     }
 
-    const cakeRecipesToInsert: CakeRecipeInsert[] = recipeIds.map(
-      (recipeId) => ({
-        cake_id: newCakeId,
-        recipe_id: recipeId,
-      }),
-    );
+    const cakeRecipesToInsert: CakeRecipeInsert[] = recipes.map((recipe) => ({
+      cake_id: newCakeId,
+      recipe_id: recipe.recipe_id,
+      order: recipe.order,
+    }));
 
     const { error: cakeRecipesError } = await supabase
       .from("cake_recipes")
@@ -73,7 +72,7 @@ export const createCake = async ({
 
 export const updateCake = async ({
   id,
-  recipeIds,
+  recipes,
   ...cakeUpdateData
 }: UpdateCakePayload) => {
   try {
@@ -101,17 +100,16 @@ export const updateCake = async ({
 
     const updatedCakeId = updatedCakeData?.id;
 
-    if (!recipeIds?.length || !updatedCakeId) {
+    if (!recipes?.length || !updatedCakeId) {
       revalidatePath("/");
       return { ...updatedCakeData, cake_recipes: [] };
     }
 
-    const cakeRecipesToInsert: CakeRecipeInsert[] = recipeIds.map(
-      (recipeId) => ({
-        cake_id: updatedCakeId,
-        recipe_id: recipeId,
-      }),
-    );
+    const cakeRecipesToInsert: CakeRecipeInsert[] = recipes.map((recipe) => ({
+      cake_id: updatedCakeId,
+      recipe_id: recipe.recipe_id,
+      order: recipe.order,
+    }));
 
     const { error: cakeRecipesError } = await supabase
       .from("cake_recipes")
@@ -129,11 +127,11 @@ export const updateCake = async ({
   }
 };
 
-export const getCakes = async () => {
+export const getCakes = async (): Promise<Cake[]> => {
   try {
     const { data, error } = await supabase
       .from("cakes")
-      .select("*, cake_recipes(recipe_id(name, id))")
+      .select("*, cake_recipes(recipe_id(name, id), order)")
       .order("created_at", { ascending: false });
 
     if (error) {

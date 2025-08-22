@@ -28,7 +28,7 @@ type CakeFormProps = {
 export const CakeForm: FC<CakeFormProps> = ({ form, recipes }) => {
   const { fields, append, remove } = useFieldArray({
     control: form.control,
-    name: "recipeIds",
+    name: "recipes",
   });
 
   return (
@@ -65,16 +65,21 @@ export const CakeForm: FC<CakeFormProps> = ({ form, recipes }) => {
       </div>
       <div className="grid gap-display3">
         {fields.map((recipeId, index) => (
-          <div key={recipeId.id} className="flex gap-4 items-end mb-4">
+          <div
+            key={`${recipeId.id}-${index}`}
+            className="flex gap-4 items-end mb-4"
+          >
             <FormField
               control={form.control}
-              name={`recipeIds.${index}`}
+              name={`recipes.${index}`}
               render={({ field }) => (
                 <FormItem className="flex-grow">
                   <FormLabel>Składnik</FormLabel>
                   <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
+                    onValueChange={(value) =>
+                      field.onChange({ recipe_id: value, order: index })
+                    }
+                    defaultValue={field.value.recipe_id}
                   >
                     <FormControl>
                       <SelectTrigger>
@@ -99,7 +104,10 @@ export const CakeForm: FC<CakeFormProps> = ({ form, recipes }) => {
           </div>
         ))}
         <Button
-          onClick={() => append(" ")}
+          onClick={(e) => {
+            e.preventDefault();
+            append({ recipe_id: "", order: recipes.length });
+          }}
           variant="secondary"
           className="w-fit"
         >

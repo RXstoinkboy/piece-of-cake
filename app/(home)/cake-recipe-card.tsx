@@ -55,9 +55,11 @@ export const RecipeCard = ({ cake, recipes }: RecipeCardProps) => {
         </CardTitle>
         <CardContent className="grid grid-cols-2 px-0 gap-8">
           <ul>
-            {cake.cake_recipes.map(({ recipe_id }) => (
-              <li key={recipe_id.id}>{recipe_id.name}</li>
-            ))}
+            {cake.cake_recipes
+              .sort((a, b) => a.order - b.order)
+              .map(({ recipe_id }, index) => (
+                <li key={`${recipe_id.id}-${index}`}>{recipe_id.name}</li>
+              ))}
           </ul>
           <section className="flex-1 flex flex-col items-end justify-center gap-3">
             <article className="flex gap-1 items-end">
