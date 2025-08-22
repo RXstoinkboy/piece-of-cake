@@ -57,6 +57,8 @@ export const createRecipe = async ({
 
     if (!ingredients?.length || !newRecipeId) {
       revalidatePath("/recipes");
+      revalidatePath("/");
+
       return { ...recipeData, ingredients: [] };
     }
 
@@ -75,6 +77,8 @@ export const createRecipe = async ({
     }
 
     revalidatePath("/recipes");
+    revalidatePath("/");
+
     return { ...recipeData, ingredients: ingredientsToInsert };
   } catch (error) {
     console.error("Error creating recipe with ingredients:", error);
@@ -109,6 +113,8 @@ export const updateRecipe = async ({
 
     if (!ingredients?.length) {
       revalidatePath("/recipes");
+      revalidatePath("/");
+
       return { ...recipeData, ingredients: [] };
     }
 
@@ -129,6 +135,8 @@ export const updateRecipe = async ({
     }
 
     revalidatePath("/recipes");
+    revalidatePath("/");
+
     return { ...recipeData, recipe_ingredients: ingredientsToInsert };
   } catch (error) {
     console.error(`Error updating recipe with ID ${id}:`, error);
@@ -143,6 +151,7 @@ export const deleteRecipe = async (id: string) => {
       throw error;
     }
     revalidatePath("/recipes");
+    revalidatePath("/");
   } catch (error) {
     console.error(`Error deleting recipe with ID ${id}:`, error);
     throw error;

@@ -32,6 +32,7 @@ export const createIngredient = async ({
     }
     revalidatePath("/ingredients");
     revalidatePath("/recipes");
+
     return data;
   } catch (error) {
     console.error("Error creating ingredient:", error);
@@ -63,6 +64,7 @@ export const updateIngredient = async ({
     }
     revalidatePath("/ingredients");
     revalidatePath("/recipes");
+    revalidatePath("/");
 
     return data;
   } catch (error) {
@@ -84,6 +86,7 @@ export const deleteIngredient = async (id: string) => {
     }
     revalidatePath("/ingredients");
     revalidatePath("/recipes");
+    revalidatePath("/");
 
     return data;
   } catch (error) {
