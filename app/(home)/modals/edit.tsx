@@ -37,15 +37,6 @@ const FormSchema = z.object({
 });
 
 export function EditCake({ children, recipes, cake }: EditCakeProps) {
-  console.log("edit", cake);
-  console.log(
-    "mapping",
-    cake.cake_recipes.map(({ recipe_id, order }) => ({
-      recipe_id: recipe_id.id,
-      order: order,
-    })),
-  );
-
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
