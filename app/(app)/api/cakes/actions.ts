@@ -1,8 +1,8 @@
 "use server";
 
-import { supabase } from "@/lib/supabase";
 import { revalidatePath } from "next/cache";
 import { Database } from "@/types/supabase";
+import { createClient } from "@/lib/supabase/server";
 
 type CakeInsert = Database["public"]["Tables"]["cakes"]["Insert"];
 type CakeUpdate = Database["public"]["Tables"]["cakes"]["Update"];
@@ -30,6 +30,7 @@ export const createCake = async ({
   recipes,
 }: CreateCakePayload) => {
   try {
+    const supabase = await createClient();
     // 1. Insert the new cake
     const { data: cakeData, error: cakeError } = await supabase
       .from("cakes")
@@ -76,6 +77,7 @@ export const updateCake = async ({
   ...cakeUpdateData
 }: UpdateCakePayload) => {
   try {
+    const supabase = await createClient();
     // 1. Update the cake
     const { data: updatedCakeData, error: cakeError } = await supabase
       .from("cakes")
@@ -129,6 +131,7 @@ export const updateCake = async ({
 
 export const getCakes = async (): Promise<Cake[]> => {
   try {
+    const supabase = await createClient();
     const { data, error } = await supabase
       .from("cakes")
       .select("*, cake_recipes(recipe_id(name, id), order)")
@@ -147,6 +150,7 @@ export const getCakes = async (): Promise<Cake[]> => {
 
 export const deleteCake = async (id: string) => {
   try {
+    const supabase = await createClient();
     const { error: cakeError } = await supabase
       .from("cakes")
       .delete()

@@ -1,9 +1,9 @@
 "use server";
 
-import { supabase } from "@/lib/supabase";
 import { revalidatePath } from "next/cache";
 import { Database } from "@/types/supabase";
 import { getRecipeIngredients } from "./utils";
+import { createClient } from "@/lib/supabase/server";
 
 type RecipeInsert = Database["public"]["Tables"]["recipes"]["Insert"];
 type IngredientForRecipeInsert = Omit<
@@ -42,6 +42,7 @@ export const createRecipe = async ({
   ingredients,
 }: CreateRecipePayload) => {
   try {
+    const supabase = await createClient();
     // 1. Insert the new recipe
     const { data: recipeData, error: recipeError } = await supabase
       .from("recipes")
@@ -93,6 +94,7 @@ export const updateRecipe = async ({
   ingredients,
 }: UpdateRecipePayload & { id: string }) => {
   try {
+    const supabase = await createClient();
     const { data: recipeData, error } = await supabase
       .from("recipes")
       .update({ name, description })
@@ -146,6 +148,7 @@ export const updateRecipe = async ({
 
 export const deleteRecipe = async (id: string) => {
   try {
+    const supabase = await createClient();
     const { error } = await supabase.from("recipes").delete().eq("id", id);
     if (error) {
       throw error;
@@ -160,6 +163,7 @@ export const deleteRecipe = async (id: string) => {
 
 export const getRecipe = async (id: string) => {
   try {
+    const supabase = await createClient();
     const { data, error } = await supabase
       .from("recipes")
       .select("*")
@@ -177,6 +181,7 @@ export const getRecipe = async (id: string) => {
 
 export const getRecipes = async (): Promise<Recipe[]> => {
   try {
+    const supabase = await createClient();
     const { data, error } = await supabase
       .from("recipes")
       .select(

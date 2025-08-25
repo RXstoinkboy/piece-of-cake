@@ -1,7 +1,7 @@
 "use client";
 
 import { Database } from "@/types/supabase";
-import { Empty, EmptyButton } from "../../../components/molecules/empty-state";
+import { Empty, EmptyButton } from "@/components/molecules/empty-state";
 import { List } from "./sections/list";
 import { AddIngredient } from "./sections/modals/add";
 

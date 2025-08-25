@@ -1,8 +1,8 @@
 "use server";
 
-import { supabase } from "@/lib/supabase";
 import { revalidatePath } from "next/cache";
 import { Database } from "@/types/supabase";
+import { createClient } from "@/lib/supabase/server";
 
 type IngredientInsert = Database["public"]["Tables"]["ingredients"]["Insert"];
 type IngredientUpdate = Database["public"]["Tables"]["ingredients"]["Update"];
@@ -16,6 +16,7 @@ export const createIngredient = async ({
   currency,
 }: IngredientInsert) => {
   try {
+    const supabase = await createClient();
     const { data, error } = await supabase
       .from("ingredients")
       .insert({
@@ -48,6 +49,7 @@ export const updateIngredient = async ({
   currency,
 }: IngredientUpdate & { id: string }) => {
   try {
+    const supabase = await createClient();
     const { data, error } = await supabase
       .from("ingredients")
       .update({
@@ -75,6 +77,7 @@ export const updateIngredient = async ({
 
 export const deleteIngredient = async (id: string) => {
   try {
+    const supabase = await createClient();
     const { data, error } = await supabase
       .from("ingredients")
       .delete()
@@ -97,6 +100,7 @@ export const deleteIngredient = async (id: string) => {
 
 export const getIngredient = async (id: string) => {
   try {
+    const supabase = await createClient();
     const { data, error } = await supabase
       .from("ingredients")
       .select("*")
@@ -114,6 +118,7 @@ export const getIngredient = async (id: string) => {
 
 export const getIngredients = async () => {
   try {
+    const supabase = await createClient();
     const { data, error } = await supabase.from("ingredients").select("*");
     if (error) {
       throw error;
