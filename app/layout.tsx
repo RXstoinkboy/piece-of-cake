@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import { Navigation } from "@/components/molecules/navigation";
 import "./globals.css";
+import { AuthProvider } from "@/lib/context/auth-context";
+import { Toaster } from "@/components/ui/sonner";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -29,10 +30,10 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-svh w-full`}
       >
-        <div className="flex items-center justify-center">
-          <Navigation />
-        </div>
-        {children}
+        <AuthProvider>
+          {children}
+          <Toaster position="bottom-center" richColors />
+        </AuthProvider>
       </body>
     </html>
   );
