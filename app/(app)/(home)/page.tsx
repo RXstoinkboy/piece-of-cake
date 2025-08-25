@@ -11,7 +11,7 @@ export default async function Home() {
     <main>
       <section className="flex flex-col items-center justify-center py-14">
         <HeartHandshake size={80} className="stroke-red-700" />
-        <h1 className="text-4xl font-bold">Cześć, Kochanie!</h1>
+        <h1 className="text-4xl font-bold">Cześć!</h1>
       </section>
 
       <Content recipes={recipes} cakes={cakes} />
