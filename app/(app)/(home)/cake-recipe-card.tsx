@@ -19,7 +19,9 @@ type RecipeCardProps = {
 };
 
 export const RecipeCard = ({ cake, recipes }: RecipeCardProps) => {
-  const orderedRecipes = cake.cake_recipes.sort((a, b) => a.order - b.order);
+  const orderedRecipes = (cake.cake_recipes ?? []).sort(
+    (a, b) => a.order - b.order,
+  );
   const initialDimensions = orderedRecipes.reduce(
     (acc, { recipe_id }, index) => {
       const key = createKey(recipe_id.id, index);

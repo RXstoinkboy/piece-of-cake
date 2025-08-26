@@ -4,7 +4,7 @@ export const getRecipeIngredients = (
   data: Omit<Recipe, "ingredients_cost" | "ingredients_cost_currency">[],
 ): Recipe[] => {
   return data.map((recipe) => {
-    const ingredients_cost = recipe.recipe_ingredients.reduce(
+    const ingredients_cost = (recipe.recipe_ingredients ?? []).reduce(
       (acc, { ingredient_id, quantity }) => {
         // Ensure ingredient_id and its properties are not null before calculation
         if (
