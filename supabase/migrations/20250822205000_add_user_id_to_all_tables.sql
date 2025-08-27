@@ -2,8 +2,12 @@
 
 DO $$
 DECLARE
-    -- Variable to hold the first user's ID
-    first_user_id UUID;
+    -- Variable to hold the user's ID for the migration
+    user_to_use_id UUID;
+    -- Variable to hold the ID of a potentially created temporary user
+    temp_user_id UUID := NULL;
+    -- Variable to hold an instance ID
+    instance_uuid UUID;
 BEGIN
     -- Temporarily disable RLS for auth.users if needed to fetch a user_id
     -- This step might not be strictly necessary if RLS on auth.users is not yet
@@ -13,13 +17,31 @@ BEGIN
     --     ALTER TABLE auth.users DISABLE ROW LEVEL SECURITY;
     -- END IF;
 
-    -- Get the ID of the first user in auth.users
-    -- This assumes there is at least one user. If not, this will fail.
-    SELECT id INTO first_user_id FROM auth.users LIMIT 1;
+    -- Try to get an existing instance ID, or use a default if none exists
+    SELECT id INTO instance_uuid FROM auth.instances LIMIT 1;
+    IF instance_uuid IS NULL THEN
+        instance_uuid := '00000000-0000-0000-0000-000000000000'; -- Default/placeholder instance ID
+    END IF;
 
-    -- If no user is found, raise an error.
-    IF first_user_id IS NULL THEN
-        RAISE EXCEPTION 'No users found in auth.users table. Please create at least one user before running this migration.';
+    -- Get the ID of the first user in auth.users
+    SELECT id INTO user_to_use_id FROM auth.users LIMIT 1;
+
+    -- If no user is found, create a temporary one and use its ID
+    IF user_to_use_id IS NULL THEN
+        INSERT INTO auth.users (id, email, encrypted_password, email_confirmed_at, instance_id, aud, role, created_at, updated_at)
+        VALUES (
+            gen_random_uuid(),
+            'migration_temp_user_' || gen_random_uuid() || '@example.com',
+            'dummy_password_hash_for_migration',
+            now(),
+            instance_uuid,
+            'authenticated',
+            'authenticated',
+            now(),
+            now()
+        )
+        RETURNING id INTO user_to_use_id;
+        temp_user_id := user_to_use_id;
     END IF;
 
     -- Add user_id column as nullable
@@ -30,11 +52,11 @@ BEGIN
     ALTER TABLE public.cake_recipes ADD COLUMN user_id UUID;
 
     -- Update existing rows with the first user's ID
-    UPDATE public.recipes SET user_id = first_user_id WHERE user_id IS NULL;
-    UPDATE public.ingredients SET user_id = first_user_id WHERE user_id IS NULL;
-    UPDATE public.recipe_ingredients SET user_id = first_user_id WHERE user_id IS NULL;
-    UPDATE public.cakes SET user_id = first_user_id WHERE user_id IS NULL;
-    UPDATE public.cake_recipes SET user_id = first_user_id WHERE user_id IS NULL;
+    UPDATE public.recipes SET user_id = user_to_use_id WHERE user_id IS NULL;
+    UPDATE public.ingredients SET user_id = user_to_use_id WHERE user_id IS NULL;
+    UPDATE public.recipe_ingredients SET user_id = user_to_use_id WHERE user_id IS NULL;
+    UPDATE public.cakes SET user_id = user_to_use_id WHERE user_id IS NULL;
+    UPDATE public.cake_recipes SET user_id = user_to_use_id WHERE user_id IS NULL;
 
     -- Alter column to be NOT NULL
     ALTER TABLE public.recipes ALTER COLUMN user_id SET NOT NULL;
@@ -63,5 +85,10 @@ BEGIN
     -- IF EXISTS (SELECT 1 FROM pg_policies WHERE policyname = 'Enable all for anon users' AND tablename = 'users') THEN
     --     ALTER TABLE auth.users ENABLE ROW LEVEL SECURITY;
     -- END IF;
+
+    -- Clean up temporary user if one was created
+    IF temp_user_id IS NOT NULL THEN
+        DELETE FROM auth.users WHERE id = temp_user_id;
+    END IF;
 
 END $$;
