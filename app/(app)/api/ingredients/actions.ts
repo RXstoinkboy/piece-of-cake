@@ -119,7 +119,10 @@ export const getIngredient = async (id: string) => {
 export const getIngredients = async () => {
   try {
     const supabase = await createClient();
-    const { data, error } = await supabase.from("ingredients").select("*");
+    const { data, error } = await supabase
+      .from("ingredients")
+      .select("*")
+      .order("created_at", { ascending: true });
     if (error) {
       throw error;
     }

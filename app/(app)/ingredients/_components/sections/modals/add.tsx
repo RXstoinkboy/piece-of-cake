@@ -1,4 +1,7 @@
-import { createIngredient } from "@/app/(app)/api/ingredients/actions";
+import {
+  createIngredient,
+  Ingredient,
+} from "@/app/(app)/api/ingredients/actions";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -15,9 +18,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { IngredientForm } from "./ingredient-form";
+import { startTransition } from "react";
 
 type AddIngredientProps = {
   children: React.ReactNode;
+  onAdd: (ingredient: Ingredient) => void;
 };
 
 const FormSchema = z.object({
@@ -28,7 +33,7 @@ const FormSchema = z.object({
   currency: z.string(),
 });
 
-export function AddIngredient({ children }: AddIngredientProps) {
+export function AddIngredient({ children, onAdd }: AddIngredientProps) {
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
@@ -41,7 +46,16 @@ export function AddIngredient({ children }: AddIngredientProps) {
   });
 
   const onSubmit = async (data: z.infer<typeof FormSchema>) => {
-    await createIngredient(data);
+    startTransition(async () => {
+      onAdd({
+        ...data,
+        id: `${new Date().getTime()}-temp`,
+        created_at: new Date().toISOString(),
+        recipe_id: "",
+        updated_at: new Date().toISOString(),
+      });
+      await createIngredient(data);
+    });
   };
 
   return (

@@ -18,10 +18,12 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { IngredientForm } from "./ingredient-form";
+import { startTransition } from "react";
 
 type EditIngredientProps = {
   children: React.ReactNode;
   ingredient: Ingredient;
+  onEdit: (ingredient: Ingredient) => void;
 };
 
 const FormSchema = z.object({
@@ -32,13 +34,22 @@ const FormSchema = z.object({
   currency: z.string(),
 });
 
-export function EditIngredient({ children, ingredient }: EditIngredientProps) {
+export function EditIngredient({
+  children,
+  ingredient,
+  onEdit,
+}: EditIngredientProps) {
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: ingredient,
   });
 
   const onSubmit = async (data: z.infer<typeof FormSchema>) => {
+    startTransition(async () => {
+      onEdit({ ...ingredient, ...data });
+      await updateIngredient({ id: ingredient.id, ...data });
+    });
+
     await updateIngredient({ id: ingredient.id, ...data });
   };
 

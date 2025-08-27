@@ -13,18 +13,24 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { startTransition } from "react";
 
 type RemoveIngredientProps = {
   ingredientId: Ingredient["id"];
   children: React.ReactNode;
+  onDelete: (id: Ingredient["id"]) => void;
 };
 
 export function RemoveIngredient({
   ingredientId,
   children,
+  onDelete,
 }: RemoveIngredientProps) {
   const onRemove = async () => {
-    await deleteIngredient(ingredientId);
+    startTransition(async () => {
+      onDelete(ingredientId);
+      await deleteIngredient(ingredientId);
+    });
   };
 
   return (
