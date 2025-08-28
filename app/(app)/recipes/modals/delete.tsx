@@ -10,15 +10,24 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { startTransition } from "react";
 
 type RemoveRecipeProps = {
   recipeId: Recipe["id"];
   children: React.ReactNode;
+  onDelete: (recipeId: Recipe["id"]) => void;
 };
 
-export function RemoveRecipe({ recipeId, children }: RemoveRecipeProps) {
+export function RemoveRecipe({
+  recipeId,
+  children,
+  onDelete,
+}: RemoveRecipeProps) {
   const onRemove = async () => {
-    await deleteRecipe(recipeId);
+    startTransition(async () => {
+      onDelete(recipeId);
+      await deleteRecipe(recipeId);
+    });
   };
 
   return (

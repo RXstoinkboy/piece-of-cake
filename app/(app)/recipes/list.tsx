@@ -17,13 +17,19 @@ import { EditRecipe } from "./modals/edit";
 export const List = ({
   recipes,
   ingredients,
+  onAdd,
+  onEdit,
+  onDelete,
 }: {
   recipes: Recipe[];
   ingredients: Ingredient[];
+  onAdd: (recipe: Recipe) => void;
+  onEdit: (recipe: Recipe) => void;
+  onDelete: (recipeId: string) => void;
 }) => {
   return (
     <div className="flex flex-col gap-4">
-      <AddRecipe ingredients={ingredients}>
+      <AddRecipe ingredients={ingredients} onAdd={onAdd}>
         <Button variant="outline" className="w-fit">
           <PlusCircle />
           Dodaj przepis
@@ -49,12 +55,16 @@ export const List = ({
               <TableCell>{recipe.ingredients_cost}</TableCell>
               <TableCell>{recipe.ingredients_cost_currency}</TableCell>
               <TableCell className="mr-0 flex gap-2">
-                <EditRecipe ingredients={ingredients} recipe={recipe}>
+                <EditRecipe
+                  onEdit={onEdit}
+                  ingredients={ingredients}
+                  recipe={recipe}
+                >
                   <Button variant="outline" size="icon">
                     <Pencil />
                   </Button>
                 </EditRecipe>
-                <RemoveRecipe recipeId={recipe.id}>
+                <RemoveRecipe onDelete={onDelete} recipeId={recipe.id}>
                   <Button variant="outline" size="icon">
                     <Trash2 />
                   </Button>

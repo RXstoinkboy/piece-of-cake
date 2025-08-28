@@ -16,11 +16,13 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { RecipeForm } from "./recipe-form";
 import { Ingredient } from "@/app/(app)/api/ingredients/actions";
+import { startTransition } from "react";
 
 type EditRecipeProps = {
   children: React.ReactNode;
   ingredients: Ingredient[];
   recipe: Recipe;
+  onEdit: (recipe: Recipe) => void;
 };
 
 const FormSchema = z.object({
@@ -36,7 +38,12 @@ const FormSchema = z.object({
     .min(1, "Musisz dodać przynajmniej jeden składnik"),
 });
 
-export function EditRecipe({ children, ingredients, recipe }: EditRecipeProps) {
+export function EditRecipe({
+  children,
+  ingredients,
+  recipe,
+  onEdit,
+}: EditRecipeProps) {
   const mapDtoToForm = (recipe: Recipe) => ({
     name: recipe.name,
     description: recipe.description ?? "",
@@ -52,14 +59,38 @@ export function EditRecipe({ children, ingredients, recipe }: EditRecipeProps) {
   });
 
   const onSubmit = async (data: z.infer<typeof FormSchema>) => {
-    const normalizedIngredients = data.ingredients.filter(
-      (ingredient) =>
-        ingredient.quantity > 0 && ingredient.ingredient_id !== "",
-    );
-    updateRecipe({
-      id: recipe.id,
-      ...data,
-      ingredients: normalizedIngredients,
+    startTransition(async () => {
+      const normalizedIngredients = data.ingredients.filter(
+        (ingredient) =>
+          ingredient.quantity > 0 && ingredient.ingredient_id !== "",
+      );
+
+      onEdit({
+        id: recipe.id,
+        ...data,
+        recipe_ingredients: normalizedIngredients.map((ingredient) => ({
+          ingredient_id: ingredients.find(
+            (ing) => ing.id === ingredient.ingredient_id,
+          )!,
+          quantity: ingredient.quantity,
+        })),
+        created_at: recipe.created_at,
+        updated_at: new Date().toISOString(),
+        description: data.description ?? null,
+        ingredients_cost: normalizedIngredients.reduce((acc, ingredient) => {
+          const ingredientData = ingredients.find(
+            (ing) => ing.id === ingredient.ingredient_id,
+          );
+          return acc + ingredient.quantity * (ingredientData?.price ?? 0);
+        }, 0),
+        ingredients_cost_currency: "PLN",
+      });
+
+      updateRecipe({
+        id: recipe.id,
+        ...data,
+        ingredients: normalizedIngredients,
+      });
     });
   };
 

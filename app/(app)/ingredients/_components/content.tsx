@@ -4,11 +4,8 @@ import { Database } from "@/types/supabase";
 import { Empty, EmptyButton } from "@/components/molecules/empty-state";
 import { List } from "./sections/list";
 import { AddIngredient } from "./sections/modals/add";
-import { useActionState, useOptimistic } from "react";
-import {
-  createIngredient,
-  Ingredient,
-} from "@/app/(app)/api/ingredients/actions";
+import { useOptimistic } from "react";
+import { Ingredient } from "@/app/(app)/api/ingredients/actions";
 
 type ContentProps = {
   ingredients: Database["public"]["Tables"]["ingredients"]["Row"][];

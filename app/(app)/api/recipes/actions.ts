@@ -186,7 +186,8 @@ export const getRecipes = async (): Promise<Recipe[]> => {
       .from("recipes")
       .select(
         "id, name, description, created_at, updated_at, recipe_ingredients(ingredient_id(id, name, quantity, price, unit, currency), quantity)",
-      );
+      )
+      .order("created_at", { ascending: true });
     if (error) {
       throw error;
     }
