@@ -4,25 +4,33 @@ import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Slider } from "@/components/ui/slider";
 import { CircleOff, Pencil, Trash2 } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Cake } from "@/app/(app)/api/cakes/actions";
 import { Recipe } from "@/app/(app)/api/recipes/actions";
 import { RemoveCake } from "./modals/delete";
 import { EditCake } from "./modals/edit";
 import { Separator } from "@/components/ui/separator";
+import { useDeepCompareEffect } from "react-use";
 
 const createKey = (id: string, index: number) => `${id}-${index}`;
 
 type RecipeCardProps = {
   cake: Cake;
   recipes: Recipe[];
+  onEdit: (cake: Cake) => void;
+  onDelete: (id: string) => void;
 };
 
-export const RecipeCard = ({ cake, recipes }: RecipeCardProps) => {
-  const orderedRecipes = (cake.cake_recipes ?? []).sort(
+export const RecipeCard = ({
+  cake,
+  recipes,
+  onEdit,
+  onDelete,
+}: RecipeCardProps) => {
+  const initialOrderedRecipes = (cake.cake_recipes ?? []).sort(
     (a, b) => a.order - b.order,
   );
-  const initialDimensions = orderedRecipes.reduce(
+  const initialDimensions = initialOrderedRecipes.reduce(
     (acc, { recipe_id }, index) => {
       const key = createKey(recipe_id.id, index);
       return {
@@ -33,6 +41,9 @@ export const RecipeCard = ({ cake, recipes }: RecipeCardProps) => {
     {},
   );
   const [dimensions, setDimensions] = useState(initialDimensions);
+  const [orderedRecipes, setOrderedRecipes] = useState<Cake["cake_recipes"]>(
+    initialOrderedRecipes,
+  );
 
   const onChange = (newValue: number[], id: string) => {
     setDimensions((prevDimensions) => ({
@@ -62,17 +73,35 @@ export const RecipeCard = ({ cake, recipes }: RecipeCardProps) => {
     0,
   );
 
+  useDeepCompareEffect(() => {
+    const orderedRecipes = (cake.cake_recipes ?? []).sort(
+      (a, b) => a.order - b.order,
+    );
+    const initialDimensions = orderedRecipes.reduce(
+      (acc, { recipe_id }, index) => {
+        const key = createKey(recipe_id.id, index);
+        return {
+          ...acc,
+          [key]: [18],
+        };
+      },
+      {},
+    );
+    setOrderedRecipes(orderedRecipes);
+    setDimensions(initialDimensions);
+  }, [cake.cake_recipes]);
+
   return (
     <Card className="min-w-full max-w-sm mb-2 ">
       <CardHeader>
         <CardTitle className="flex gap-2 items-center">
           {cake.name}
-          <EditCake recipes={recipes} cake={cake}>
+          <EditCake onEdit={onEdit} recipes={recipes} cake={cake}>
             <Button variant="outline" size="icon">
               <Pencil />
             </Button>
           </EditCake>
-          <RemoveCake cakeId={cake.id}>
+          <RemoveCake onDelete={onDelete} cakeId={cake.id}>
             <Button variant="outline" size="icon">
               <Trash2 />
             </Button>
@@ -104,13 +133,13 @@ export const RecipeCard = ({ cake, recipes }: RecipeCardProps) => {
                     <article className="flex gap-2 items-center">
                       <article className=" flex gap-1 w-full justify-center items-center">
                         <CircleOff size={18} className="rotate-90" />
-                        <span>{dimensions[key][0]} cm</span>
+                        <span>{dimensions[key]?.[0]} cm</span>
                       </article>{" "}
                       /
                       <p>
-                        {calculatePriceForDiameter(dimensions[key][0]).toFixed(
-                          2,
-                        )}
+                        {calculatePriceForDiameter(
+                          dimensions[key]?.[0],
+                        ).toFixed(2)}
                         <span className="ml-1">PLN</span>
                       </p>
                     </article>

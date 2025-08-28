@@ -10,15 +10,20 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { startTransition } from "react";
 
 type RemoveCakeProps = {
   cakeId: Cake["id"];
+  onDelete: (id: string) => void;
   children: React.ReactNode;
 };
 
-export function RemoveCake({ cakeId, children }: RemoveCakeProps) {
-  const onRemove = async () => {
-    await deleteCake(cakeId);
+export function RemoveCake({ cakeId, children, ...props }: RemoveCakeProps) {
+  const onRemove = () => {
+    startTransition(async () => {
+      props.onDelete(cakeId);
+      await deleteCake(cakeId);
+    });
   };
 
   return (
