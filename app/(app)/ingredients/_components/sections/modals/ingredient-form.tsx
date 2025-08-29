@@ -39,94 +39,98 @@ export const IngredientForm: FC<IngredientFormProps> = ({ form }) => {
           )}
         />
       </div>
-      <div className="grid gap-3">
-        <FormField
-          control={form.control}
-          name="quantity"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Ilość</FormLabel>
-              <FormControl>
-                <Input
-                  type="number"
-                  min={0}
-                  step={0.01}
-                  placeholder="np. 1.5"
-                  {...field}
-                  onChange={(e) => field.onChange(Number(e.target.value))}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-      </div>
-      <div className="grid gap-3">
-        <FormField
-          control={form.control}
-          name="unit"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Jednostka</FormLabel>
-              <Select
-                onValueChange={field.onChange}
-                defaultValue={field.value}
-                {...field}
-              >
+      <div className="flex gap-2">
+        <div className="grid gap-3 flex-1">
+          <FormField
+            control={form.control}
+            name="quantity"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Ilość</FormLabel>
                 <FormControl>
-                  <SelectTrigger className="w-[180px]">
-                    <SelectValue placeholder="np. g" />
-                  </SelectTrigger>
+                  <Input
+                    type="number"
+                    min={0}
+                    step={0.01}
+                    placeholder="np. 1.5"
+                    {...field}
+                    onChange={(e) => field.onChange(Number(e.target.value))}
+                  />
                 </FormControl>
-                <SelectContent>
-                  <SelectItem value="g">Gramy</SelectItem>
-                  <SelectItem value="kg">Kilogramy</SelectItem>
-                  <SelectItem value="l">Litry</SelectItem>
-                  <SelectItem value="ml">Mililitry</SelectItem>
-                  <SelectItem value="pcs">Sztuki</SelectItem>
-                </SelectContent>
-              </Select>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-      </div>
-      <div className="grid gap-3">
-        <FormField
-          control={form.control}
-          name="price"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Cena</FormLabel>
-              <FormControl>
-                <Input
-                  placeholder="np. 1.50"
-                  type="number"
-                  min={0}
-                  step={0.01}
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
+        <div className="grid gap-3 w-full flex-0 min-w-[120px]">
+          <FormField
+            control={form.control}
+            name="unit"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Jednostka</FormLabel>
+                <Select
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
                   {...field}
-                  onChange={(e) => field.onChange(Number(e.target.value))}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+                >
+                  <FormControl>
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder="np. g" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    <SelectItem value="g">Gramy</SelectItem>
+                    <SelectItem value="kg">Kilogramy</SelectItem>
+                    <SelectItem value="l">Litry</SelectItem>
+                    <SelectItem value="ml">Mililitry</SelectItem>
+                    <SelectItem value="pcs">Sztuki</SelectItem>
+                  </SelectContent>
+                </Select>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
       </div>
-      <div className="grid gap-3">
-        <FormField
-          control={form.control}
-          name="currency"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Waluta</FormLabel>
-              <FormControl>
-                <Input placeholder="np. PLN" disabled {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+      <div className="flex gap-2">
+        <div className="grid gap-3 flex-1">
+          <FormField
+            control={form.control}
+            name="price"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Cena</FormLabel>
+                <FormControl>
+                  <Input
+                    placeholder="np. 1.50"
+                    type="number"
+                    min={0}
+                    step={0.01}
+                    {...field}
+                    onChange={(e) => field.onChange(Number(e.target.value))}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
+        <div className="grid gap-3 flex-0 min-w-[120px]">
+          <FormField
+            control={form.control}
+            name="currency"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Waluta</FormLabel>
+                <FormControl>
+                  <Input placeholder="np. PLN" disabled {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
       </div>
     </div>
   );
