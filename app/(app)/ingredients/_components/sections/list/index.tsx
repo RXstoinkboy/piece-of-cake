@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { PlusCircle, Trash2, Pencil, LoaderCircle } from "lucide-react";
+import { PlusCircle, Trash2, Pencil } from "lucide-react";
 import {
   Table,
   TableHeader,

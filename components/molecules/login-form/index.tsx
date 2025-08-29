@@ -33,7 +33,7 @@ type LoginFormProps = {
   mode: "login" | "register";
 } & React.ComponentProps<"div">;
 
-export function LoginForm({ mode, ...props }: LoginFormProps) {
+export function LoginForm({ mode }: LoginFormProps) {
   const isRegister = mode === "register";
 
   const form = useForm<z.infer<typeof FormSchema>>({

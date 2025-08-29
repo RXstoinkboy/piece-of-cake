@@ -1,6 +1,7 @@
 import * as React from "react";
 import { cn } from "@/lib/utils";
 
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 interface SpinnerProps extends React.HTMLAttributes<HTMLDivElement> {}
 
 const Spinner = React.forwardRef<HTMLDivElement, SpinnerProps>(
@@ -10,7 +11,7 @@ const Spinner = React.forwardRef<HTMLDivElement, SpinnerProps>(
         ref={ref}
         className={cn(
           "inline-block h-4 w-4 animate-spin rounded-full border-2 border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]",
-          className
+          className,
         )}
         role="status"
         {...props}
@@ -20,7 +21,7 @@ const Spinner = React.forwardRef<HTMLDivElement, SpinnerProps>(
         </span>
       </div>
     );
-  }
+  },
 );
 Spinner.displayName = "Spinner";
 

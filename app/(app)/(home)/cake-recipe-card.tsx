@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Slider } from "@/components/ui/slider";
 import { CircleOff, Pencil, Trash2 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Cake } from "@/app/(app)/api/cakes/actions";
 import { Recipe } from "@/app/(app)/api/recipes/actions";
 import { RemoveCake } from "./modals/delete";
