@@ -94,21 +94,27 @@ export const RecipeCard = ({
   return (
     <Card className="min-w-full max-w-sm mb-2 ">
       <CardHeader>
-        <CardTitle className="flex gap-2 items-center">
+        <CardTitle className="flex items-center justify-between">
           {cake.name}
-          <EditCake onEdit={onEdit} recipes={recipes} cake={cake}>
-            <Button variant="outline" size="icon">
-              <Pencil />
-            </Button>
-          </EditCake>
-          <RemoveCake onDelete={onDelete} cakeId={cake.id}>
-            <Button variant="outline" size="icon">
-              <Trash2 />
-            </Button>
-          </RemoveCake>
+          <div className="flex gap-2 items-center">
+            <EditCake onEdit={onEdit} recipes={recipes} cake={cake}>
+              <Button variant="outline" size="icon">
+                <Pencil />
+              </Button>
+            </EditCake>
+            <RemoveCake onDelete={onDelete} cakeId={cake.id}>
+              <Button
+                variant="outline"
+                size="icon"
+                className="text-destructive"
+              >
+                <Trash2 />
+              </Button>
+            </RemoveCake>
+          </div>
         </CardTitle>
         <CardContent className="p-0 mt-4">
-          <ul className="grid gap-2 px-1">
+          <ul className="grid gap-1">
             {orderedRecipes.map(({ recipe_id }, index) => {
               const key = createKey(
                 recipe_id.id,
@@ -119,7 +125,7 @@ export const RecipeCard = ({
                   key={key}
                   className="grid grid-cols-1 md:grid-cols-2 p-2 gap-8 border rounded-md items-center"
                 >
-                  <p className="text-lg font-semibold">{recipe_id.name}</p>
+                  <p>{recipe_id.name}</p>
                   <section className="flex items-center justify-center gap-3">
                     <section className="flex flex-1 flex-col">
                       <Slider

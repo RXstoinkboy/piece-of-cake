@@ -51,7 +51,6 @@ export const IngredientForm: FC<IngredientFormProps> = ({ form }) => {
                   <Input
                     type="number"
                     min={0}
-                    step={0.01}
                     placeholder="np. 1.5"
                     {...field}
                     onChange={(e) => field.onChange(Number(e.target.value))}
@@ -106,7 +105,6 @@ export const IngredientForm: FC<IngredientFormProps> = ({ form }) => {
                     placeholder="np. 1.50"
                     type="number"
                     min={0}
-                    step={0.01}
                     {...field}
                     onChange={(e) => field.onChange(Number(e.target.value))}
                   />

@@ -35,7 +35,7 @@ export function RemoveRecipe({
       <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Usun przepis</DialogTitle>
+          <DialogTitle>Usuń przepis</DialogTitle>
           <DialogDescription>
             Czy na pewno chcesz usunąć ten przepis?
           </DialogDescription>

@@ -18,6 +18,7 @@ import { useFieldArray, UseFormReturn } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { PlusCircle, Trash2 } from "lucide-react";
 import { Recipe } from "@/app/(app)/api/recipes/actions";
+import { Textarea } from "@/components/ui/textarea";
 
 type CakeFormProps = {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -56,7 +57,7 @@ export const CakeForm: FC<CakeFormProps> = ({ form, recipes }) => {
             <FormItem>
               <FormLabel>Notatki</FormLabel>
               <FormControl>
-                <Input placeholder="Dodatkowe informacje" {...field} />
+                <Textarea placeholder="Dodatkowe informacje" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -64,17 +65,17 @@ export const CakeForm: FC<CakeFormProps> = ({ form, recipes }) => {
         />
       </div>
       <div className="grid gap-display3">
+        <FormLabel className="mb-2">Składniki</FormLabel>
         {fields.map((recipeId, index) => (
           <div
             key={`${recipeId.id}-${index}`}
-            className="flex gap-4 items-end mb-4"
+            className="grid grid-cols-[1fr_auto] gap-4 items-end mb-1"
           >
             <FormField
               control={form.control}
               name={`recipes.${index}`}
               render={({ field }) => (
-                <FormItem className="flex-grow">
-                  <FormLabel>Składnik</FormLabel>
+                <FormItem>
                   <Select
                     onValueChange={(value) =>
                       field.onChange({ recipe_id: value, order: index })
@@ -82,7 +83,7 @@ export const CakeForm: FC<CakeFormProps> = ({ form, recipes }) => {
                     defaultValue={field.value.recipe_id}
                   >
                     <FormControl>
-                      <SelectTrigger>
+                      <SelectTrigger className="w-full">
                         <SelectValue placeholder="Wybierz składnik z listy" />
                       </SelectTrigger>
                     </FormControl>
@@ -109,7 +110,7 @@ export const CakeForm: FC<CakeFormProps> = ({ form, recipes }) => {
             append({ recipe_id: "", order: recipes.length });
           }}
           variant="secondary"
-          className="w-fit"
+          className="w-fit mt-2"
         >
           <PlusCircle className="mr-2" />
           Dodaj składnik

@@ -18,6 +18,7 @@ import { FC } from "react";
 import { useFieldArray, UseFormReturn } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { PlusCircle, Trash2 } from "lucide-react";
+import { Textarea } from "@/components/ui/textarea";
 
 type RecipeFormProps = {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -56,28 +57,31 @@ export const RecipeForm: FC<RecipeFormProps> = ({ form, ingredients }) => {
             <FormItem>
               <FormLabel>Notatki</FormLabel>
               <FormControl>
-                <Input placeholder="Dodatkowe informacje" {...field} />
+                <Textarea placeholder="Dodatkowe informacje" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
       </div>
-      <div className="grid gap-display3">
+      <div className="grid gap-display3 ">
         {fields.map((ingredient, index) => (
-          <div key={ingredient.id} className="flex gap-4 items-end mb-4">
+          <div
+            key={ingredient.id}
+            className="grid grid-cols-[1fr_90px_auto] gap-4 items-start mb-4 "
+          >
             <FormField
               control={form.control}
               name={`ingredients.${index}.ingredient_id`}
               render={({ field }) => (
-                <FormItem className="flex-grow">
+                <FormItem>
                   <FormLabel>Składnik</FormLabel>
                   <Select
                     onValueChange={field.onChange}
                     defaultValue={field.value}
                   >
                     <FormControl>
-                      <SelectTrigger>
+                      <SelectTrigger className="w-full">
                         <SelectValue placeholder="Wybierz składnik z listy" />
                       </SelectTrigger>
                     </FormControl>
@@ -97,12 +101,13 @@ export const RecipeForm: FC<RecipeFormProps> = ({ form, ingredients }) => {
               control={form.control}
               name={`ingredients.${index}.quantity`}
               render={({ field }) => (
-                <FormItem className="w-1/3">
+                <FormItem>
                   <FormLabel>Ilość</FormLabel>
                   <FormControl>
                     <Input
                       type="number"
                       placeholder="np. 200g"
+                      min={0}
                       {...field}
                       onChange={({ target }) =>
                         field.onChange(Number(target.value))
@@ -113,15 +118,20 @@ export const RecipeForm: FC<RecipeFormProps> = ({ form, ingredients }) => {
                 </FormItem>
               )}
             />
-            <Button size="icon" onClick={() => remove(index)} variant="outline">
+            <Button
+              size="icon"
+              onClick={() => remove(index)}
+              variant="outline"
+              className="mt-[22px]"
+            >
               <Trash2 className="text-destructive" />
             </Button>
           </div>
         ))}
         <Button
-          onClick={() => append({ ingredient_id: "", quantity: 0 })}
+          onClick={() => append({ ingredient_id: "", quantity: 1 })}
           variant="secondary"
-          className="w-fit"
+          className="w-fit justify-self-start"
         >
           <PlusCircle className="mr-2" />
           Dodaj składnik

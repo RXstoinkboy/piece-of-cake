@@ -61,7 +61,11 @@ export const List = ({
                   ingredientId={ingredient.id}
                   onDelete={onDelete}
                 >
-                  <Button variant="outline" size="icon">
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    className="text-destructive"
+                  >
                     <Trash2 />
                   </Button>
                 </RemoveIngredient>

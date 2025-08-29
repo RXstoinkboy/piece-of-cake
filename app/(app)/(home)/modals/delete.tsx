@@ -31,7 +31,7 @@ export function RemoveCake({ cakeId, children, ...props }: RemoveCakeProps) {
       <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Usun tort</DialogTitle>
+          <DialogTitle>Usuń tort</DialogTitle>
           <DialogDescription>
             Czy na pewno chcesz usunąć ten tort?
           </DialogDescription>

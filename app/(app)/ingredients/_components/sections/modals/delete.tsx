@@ -38,7 +38,7 @@ export function RemoveIngredient({
       <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Usun składnik</DialogTitle>
+          <DialogTitle>Usuń składnik</DialogTitle>
           <DialogDescription>
             Czy na pewno chcesz usunąć ten składnik?
           </DialogDescription>

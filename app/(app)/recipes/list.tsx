@@ -65,7 +65,11 @@ export const List = ({
                   </Button>
                 </EditRecipe>
                 <RemoveRecipe onDelete={onDelete} recipeId={recipe.id}>
-                  <Button variant="outline" size="icon">
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    className="text-destructive"
+                  >
                     <Trash2 />
                   </Button>
                 </RemoveRecipe>
