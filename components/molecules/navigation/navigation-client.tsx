@@ -13,7 +13,7 @@ import {
 
 const components: { title: string; href: string }[] = [
   {
-    title: "Start",
+    title: "Torty",
     href: "/",
   },
   {
