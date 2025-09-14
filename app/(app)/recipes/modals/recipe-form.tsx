@@ -143,7 +143,7 @@ export const RecipeForm: FC<RecipeFormProps> = ({ form, ingredients }) => {
             setTimeout(() => {
               const lastIndex = fields.length;
               ingredientSelectRefs.current[lastIndex]?.focus();
-            }, 10);
+            }, 0);
           }}
           variant="secondary"
           className="w-fit justify-self-start"
