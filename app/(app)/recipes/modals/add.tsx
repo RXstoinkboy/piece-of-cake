@@ -30,11 +30,11 @@ const FormSchema = z.object({
   ingredients: z
     .array(
       z.object({
-        ingredient_id: z.string().min(1, "Nazwa składnika jest wymagana"),
+        ingredient_id: z.string().min(1, "Nazwa produktu jest wymagana"),
         quantity: z.number().positive("Ilość musi być większa od zera"),
       }),
     )
-    .min(1, "Musisz dodać przynajmniej jeden składnik"),
+    .min(1, "Musisz dodać przynajmniej jeden produkt"),
 });
 
 export function AddRecipe({ children, ingredients, onAdd }: AddRecipeProps) {
@@ -90,7 +90,7 @@ export function AddRecipe({ children, ingredients, onAdd }: AddRecipeProps) {
           <DialogHeader>
             <DialogTitle>Dodaj przepis</DialogTitle>
             <DialogDescription>
-              Podaj listę składników przepisu dla średnicy 18 cm
+              Podaj listę produktów przepisu dla średnicy 18 cm
             </DialogDescription>
           </DialogHeader>
           <form onSubmit={form.handleSubmit(onSubmit)}>

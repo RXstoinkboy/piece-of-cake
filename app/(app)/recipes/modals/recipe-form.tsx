@@ -14,7 +14,7 @@ import {
   SelectItem,
 } from "@/components/ui/select";
 import { Database } from "@/types/supabase";
-import { FC } from "react";
+import { FC, useRef } from "react";
 import { useFieldArray, UseFormReturn } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { PlusCircle, Trash2 } from "lucide-react";
@@ -31,6 +31,7 @@ export const RecipeForm: FC<RecipeFormProps> = ({ form, ingredients }) => {
     control: form.control,
     name: "ingredients",
   });
+  const ingredientSelectRefs = useRef<(HTMLButtonElement | null)[]>([]);
 
   return (
     <div className="grid gap-4">
@@ -75,14 +76,19 @@ export const RecipeForm: FC<RecipeFormProps> = ({ form, ingredients }) => {
               name={`ingredients.${index}.ingredient_id`}
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Składnik</FormLabel>
+                  <FormLabel>Produkt</FormLabel>
                   <Select
                     onValueChange={field.onChange}
                     defaultValue={field.value}
                   >
                     <FormControl>
-                      <SelectTrigger className="w-full">
-                        <SelectValue placeholder="Wybierz składnik z listy" />
+                      <SelectTrigger
+                        className="w-full"
+                        ref={(el) => {
+                          ingredientSelectRefs.current[index] = el;
+                        }}
+                      >
+                        <SelectValue placeholder="Wybierz produkt z listy" />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
@@ -106,6 +112,7 @@ export const RecipeForm: FC<RecipeFormProps> = ({ form, ingredients }) => {
                   <FormControl>
                     <Input
                       type="number"
+                      step={0.01}
                       placeholder="np. 200g"
                       min={0}
                       {...field}
@@ -129,12 +136,20 @@ export const RecipeForm: FC<RecipeFormProps> = ({ form, ingredients }) => {
           </div>
         ))}
         <Button
-          onClick={() => append({ ingredient_id: "", quantity: 1 })}
+          onClick={(e) => {
+            e.preventDefault();
+            append({ ingredient_id: "", quantity: 1 });
+
+            setTimeout(() => {
+              const lastIndex = fields.length;
+              ingredientSelectRefs.current[lastIndex]?.focus();
+            }, 10);
+          }}
           variant="secondary"
           className="w-fit justify-self-start"
         >
           <PlusCircle className="mr-2" />
-          Dodaj składnik
+          Dodaj produkt
         </Button>
       </div>
     </div>
