@@ -42,15 +42,15 @@ export const Content = ({ ingredients }: ContentProps) => {
     return (
       <div className="flex flex-col items-center justify-center h-full w-full">
         <Empty
-          title="Brak składników"
-          text="Dodaj pierwszy składnik, aby rozpocząć pracę."
+          title="Brak produktów"
+          text="Dodaj pierwszy produkt, aby rozpocząć pracę."
           buttons={
             <AddIngredient
               onAdd={(ingredient) =>
                 dispatch({ type: "ADD", payload: ingredient })
               }
             >
-              <EmptyButton>Dodaj składnik</EmptyButton>
+              <EmptyButton>Dodaj produkt</EmptyButton>
             </AddIngredient>
           }
         />

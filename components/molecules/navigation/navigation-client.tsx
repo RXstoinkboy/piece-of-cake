@@ -21,7 +21,7 @@ const components: { title: string; href: string }[] = [
     href: "/recipes",
   },
   {
-    title: "Składniki",
+    title: "Produkty",
     href: "/ingredients",
   },
 ];

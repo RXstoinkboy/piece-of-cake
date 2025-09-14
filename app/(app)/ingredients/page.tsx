@@ -7,7 +7,7 @@ export default async function Ingredients() {
   return (
     <main>
       <section className="flex flex-col items-center justify-center p-4">
-        <h1 className="text-4xl font-bold">Składniki</h1>
+        <h1 className="text-4xl font-bold">Produkty</h1>
       </section>
 
       <Content ingredients={ingredients} />
